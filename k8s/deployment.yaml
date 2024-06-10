@@ -58,8 +58,22 @@ spec:
       containers:
         - name: jueju
           image: ghcr.io/robert-cronin/jueju-backend:main
+          # images under latest are always pulled so this is the same thing (under main):
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           envFrom:
             - secretRef:
                 name: jueju
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: jueju-backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: jueju-backend
+  minReplicas: 1
+  maxReplicas: 4
