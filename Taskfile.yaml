@@ -34,4 +34,5 @@ tasks:
   k8s-secret:
     desc: "This puts the .env file into a k8s secret. Requires the \"jueju\" namespace to exist."
     cmds:
+      - "kubectl delete secret jueju -n jueju --ignore-not-found"
       - "kubectl create secret generic jueju --from-env-file=.env -n jueju"

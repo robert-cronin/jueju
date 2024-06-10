@@ -25,10 +25,15 @@ func New() (*Authenticator, error) {
 		return nil, err
 	}
 
+	redirectURL := "http://localhost:3000/api/callback"
+	if os.Getenv("GIN_MODE") == "release" {
+		redirectURL = os.Getenv("AUTH0_CALLBACK_URL")
+	}
+
 	conf := oauth2.Config{
 		ClientID:     os.Getenv("AUTH0_CLIENT_ID"),
 		ClientSecret: os.Getenv("AUTH0_CLIENT_SECRET"),
-		RedirectURL:  os.Getenv("AUTH0_CALLBACK_URL"),
+		RedirectURL:  redirectURL,
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{oidc.ScopeOpenID, "profile"},
 	}
