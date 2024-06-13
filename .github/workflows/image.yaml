@@ -1,14 +1,13 @@
 name: Create and publish Docker images
 
-# Configures this workflow to run every time a change is pushed to the branch called `main`.
+# Configures this workflow to run every time a change is pushed to a tag starting with `v`.
 on:
   push:
     tags:
-      - 'v*'  # Trigger on version tags
-  workflow_dispatch:  # Allows manual triggering
+      - "v*" # Trigger on version tags
+  workflow_dispatch: # Allows manual triggering
 
-
-# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+# Defines custom environment variables for the workflow.
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -46,7 +45,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
         id: push
@@ -56,15 +55,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.service }}-${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.service }}-latest
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             TARGETARCH=${{ matrix.targetarch }}
-
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
