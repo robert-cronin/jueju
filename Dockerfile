@@ -1,4 +1,7 @@
-FROM golang:latest as builder
+# Use build arguments to specify the architecture
+ARG TARGETARCH
+
+FROM golang:latest AS builder
 
 WORKDIR /app
 
@@ -8,7 +11,8 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+# Use the build argument for the target architecture
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -a -installsuffix cgo -o main .
 
 FROM alpine:latest  
 

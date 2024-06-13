@@ -51,6 +51,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            TARGETARCH=${{ matrix.targetarch }}
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image.
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
