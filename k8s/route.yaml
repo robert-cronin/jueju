@@ -13,46 +13,20 @@
 # limitations under the License.
 
 apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: jueju-gateway
-  namespace: jueju
-spec:
-  gatewayClassName: istio
-  listeners:
-    - name: http
-      hostname: "jueju.robertcronin.com"
-      port: 80
-      protocol: HTTP
-      allowedRoutes:
-        namespaces:
-          from: All
-    - name: https
-      protocol: HTTPS
-      port: 443
-      hostname: "jueju.robertcronin.com"
-      tls:
-        certificateRefs:
-          - kind: Secret
-            group: ""
-            name: jueju-tls-secret
----
-apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: jueju-route
+  name: jueju-backend
   namespace: jueju
 spec:
   parentRefs:
-    - name: jueju-gateway
-      namespace: jueju
+    - name: gateway
+      namespace: robertcronincom
   hostnames: ["jueju.robertcronin.com"]
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /api
+            value: /api/
       backendRefs:
         - name: jueju-backend
-          namespace: jueju
           port: 3000
