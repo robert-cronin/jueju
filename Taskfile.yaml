@@ -25,6 +25,16 @@ tasks:
     cmds:
       - ./scripts/increment-patch.sh
 
+  minor:
+    desc: "Increment the minor version"
+    cmds:
+      - ./scripts/increment-minor.sh
+
+  major:
+    desc: "Increment the major version"
+    cmds:
+      - ./scripts/increment-major.sh
+
   list-tags:
     desc: "List all tags"
     cmds:
