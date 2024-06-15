@@ -70,7 +70,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
     } finally {
       setLoading(false);
-      setUser({ name: "Robert Cronin" });
     }
   };
 
