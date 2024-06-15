@@ -72,6 +72,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: jueju-backend
+  namespace: jueju
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

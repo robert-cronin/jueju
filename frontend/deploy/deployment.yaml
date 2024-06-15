@@ -59,19 +59,17 @@ spec:
       serviceAccountName: jueju-frontend
       containers:
         - name: jueju
-          image: ghcr.io/robert-cronin/jueju-frontend:main
+          image: ghcr.io/robert-cronin/jueju:frontend-latest
           # images under latest are always pulled so this is the same thing (under main):
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-          envFrom:
-            - secretRef:
-                name: jueju
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: jueju-frontend
+  namespace: jueju
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
