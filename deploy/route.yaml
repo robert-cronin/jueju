@@ -30,3 +30,10 @@ spec:
       backendRefs:
         - name: jueju-backend
           port: 3000
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: jueju-frontend
+          port: 80
