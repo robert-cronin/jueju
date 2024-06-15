@@ -12,28 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Link, useLocation } from "react-router-dom";
-import NavBar from "@/components/NavBar";
-import { Tabs, Tab } from "@mui/material";
+import React from "react";
+import { CircularProgress, Grid } from "@mui/material";
 
-const App = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
+const LoadingScreen: React.FC = () => {
   return (
-    <>
-      <NavBar />
-      <Tabs value={currentPath}>
-        <Tab label="Home" value="/" component={Link} to="/" />
-        <Tab
-          label="My JueJu"
-          value="/my-jueju"
-          component={Link}
-          to="/my-jueju"
-        />
-        <Tab label="Feed" value="/feed" component={Link} to="/feed" />
-      </Tabs>
-    </>
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      style={{ height: "100vh" }}
+    >
+      <CircularProgress />
+    </Grid>
   );
 };
 
-export default App;
+export default LoadingScreen;

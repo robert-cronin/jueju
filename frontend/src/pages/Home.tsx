@@ -12,28 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Link, useLocation } from "react-router-dom";
-import NavBar from "@/components/NavBar";
-import { Tabs, Tab } from "@mui/material";
+import { Container, Typography, Button } from "@mui/material";
 
-const App = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
+const Home = () => {
   return (
-    <>
-      <NavBar />
-      <Tabs value={currentPath}>
-        <Tab label="Home" value="/" component={Link} to="/" />
-        <Tab
-          label="My JueJu"
-          value="/my-jueju"
-          component={Link}
-          to="/my-jueju"
-        />
-        <Tab label="Feed" value="/feed" component={Link} to="/feed" />
-      </Tabs>
-    </>
+    <Container maxWidth="sm">
+      <Typography variant="h2" align="center" gutterBottom>
+        Welcome Home
+      </Typography>
+      <Typography variant="body1" align="center" gutterBottom>
+        This is a simple home screen.
+      </Typography>
+      <Button variant="contained" color="primary">
+        Click Me
+      </Button>
+    </Container>
   );
 };
 
-export default App;
+export default Home;
