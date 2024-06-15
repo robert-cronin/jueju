@@ -59,7 +59,7 @@ spec:
       serviceAccountName: jueju-backend
       containers:
         - name: jueju
-          image: ghcr.io/robert-cronin/jueju-backend:main
+          image: ghcr.io/robert-cronin/jueju:backend-latest
           # images under latest are always pulled so this is the same thing (under main):
           imagePullPolicy: Always
           ports:
