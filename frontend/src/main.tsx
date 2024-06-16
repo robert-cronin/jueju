@@ -7,6 +7,7 @@ import theme from "@/theme/Theme.ts";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
+import { APIProvider } from "./context/APIContext";
 
 // define global styles
 const GlobalStyle = createGlobalStyle`
@@ -23,9 +24,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <GlobalStyle />
       <CssBaseline />
       <Router>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <APIProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </APIProvider>
       </Router>
     </ThemeProvider>
   </React.StrictMode>

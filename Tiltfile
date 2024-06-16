@@ -25,8 +25,8 @@ secret_create_generic(
     namespace='jueju',
     from_env_file='./backend/.env',
 )
-k8s_yaml('./backend/deploy/deployment.yaml')
-k8s_yaml('./backend/deploy/namespace.yaml')
+k8s_yaml('./deploy/backend-deployment.yaml')
+k8s_yaml('./deploy/namespace.yaml')
 k8s_resource('jueju-backend', port_forwards='3000:3000')
 
 
@@ -40,5 +40,5 @@ docker_build(
     ],
     target='dev'
 )
-k8s_yaml('./frontend/deploy/deployment.yaml')
+k8s_yaml('./deploy/frontend-deployment.yaml')
 k8s_resource('jueju-frontend', port_forwards='5173:5173')

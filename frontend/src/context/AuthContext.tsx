@@ -23,6 +23,8 @@ import React, {
   ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAPI } from "@/context/APIContext";
+import * as api from "@clients/v1.0";
 
 interface AuthContextType {
   user: any | null;
@@ -49,6 +51,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const { api } = useAPI();
+
   const navigate = useNavigate();
 
   const goToLogin = () => {
@@ -59,12 +63,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     navigate("/api/logout");
   };
 
-  const fetchUser = async () => {
+  const getUser = async () => {
     try {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      const response = await fetch("/api/user");
-      const data = await response.json();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await api.getUser();
+      const { data } = response;
       setUser(data);
     } catch (error) {
       setUser(null);
@@ -74,7 +78,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    getUser();
   }, []);
 
   if (loading) {

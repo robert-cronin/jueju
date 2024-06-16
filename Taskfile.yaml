@@ -47,3 +47,8 @@ tasks:
     cmds:
       - git tag -d $TAG
       - git push --delete origin $TAG
+
+  openapi:
+    desc: "Generate OpenAPI documentation"
+    cmds:
+      - ./scripts/generate-openapi.sh

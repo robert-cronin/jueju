@@ -1,28 +1,37 @@
 package main
 
 import (
+	"fmt"
 	"log"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 
 	"github.com/joho/godotenv"
 
-	"github.com/robert-cronin/jueju-backend/internal/authenticator"
-	"github.com/robert-cronin/jueju-backend/internal/router"
+	"github.com/robert-cronin/jueju-backend/api"
+	_ "github.com/robert-cronin/jueju-backend/api"
 )
+
+func middleware(c *fiber.Ctx) error {
+	fmt.Println("Request to", c.Path())
+	return c.Next()
+}
 
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found, resorting to the environment")
 	}
 
-	auth, err := authenticator.New()
-	if err != nil {
-		log.Fatalf("Failed to initialize the authenticator: %v", err)
-	}
+	server := api.NewServer()
 
-	rtr := router.New(auth)
+	app := fiber.New()
+	app.Use(cors.New())
 
-	log.Print("Server listening on port 3000")
-	if err := rtr.Run(":3000"); err != nil {
-		log.Fatalf("There was an error with the http server: %v", err)
-	}
+	apiGroup := app.Group("/api", middleware)
+
+	api.RegisterHandlers(apiGroup, server)
+
+	log.Fatal(app.Listen("0.0.0.0:3000"))
+
 }
