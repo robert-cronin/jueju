@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useAPI } from "@/context/APIContext";
 
 interface AuthContextType {
-  user: any | null;
+  user: object | null;
   goToLogin: () => void;
   goToLogout: () => void;
   loading: boolean;
@@ -47,7 +47,7 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<object | null>(null);
   const [loading, setLoading] = useState(true);
 
   const { api } = useAPI();
