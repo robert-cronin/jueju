@@ -5,11 +5,11 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
-	"os"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 )
 
@@ -36,18 +36,34 @@ func (a *Authenticator) verifyIDToken(ctx context.Context, token *oauth2.Token) 
 }
 
 func NewAuthenticator() (*Authenticator, error) {
+	domain := viper.GetString("auth0.domain")
 	provider, err := oidc.NewProvider(
 		context.Background(),
-		"https://"+os.Getenv("AUTH0_DOMAIN")+"/",
+		"https://"+domain+"/",
 	)
 	if err != nil {
 		return nil, err
 	}
 
+	clientID := viper.GetString("auth0.client_id")
+	if clientID == "" {
+		return nil, errors.New("client_id is required")
+	}
+
+	clientSecret := viper.GetString("auth0.client_secret")
+	if clientSecret == "" {
+		return nil, errors.New("client_secret is required")
+	}
+
+	redirectURI := viper.GetString("auth0.redirect_uri")
+	if redirectURI == "" {
+		return nil, errors.New("redirect_uri is required")
+	}
+
 	conf := oauth2.Config{
-		ClientID:     os.Getenv("AUTH0_CLIENT_ID"),
-		ClientSecret: os.Getenv("AUTH0_CLIENT_SECRET"),
-		RedirectURL:  os.Getenv("AUTH0_CALLBACK_URL"),
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		RedirectURL:  redirectURI,
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{oidc.ScopeOpenID, "profile"},
 	}
@@ -96,7 +112,9 @@ func (a *Authenticator) Login(c *fiber.Ctx) fiber.Handler {
 			return err
 		}
 
-		return c.Redirect(a.AuthCodeURL(state), fiber.StatusTemporaryRedirect)
+		location := a.AuthCodeURL(state)
+
+		return c.Redirect(location, fiber.StatusTemporaryRedirect)
 	}
 }
 
@@ -139,7 +157,9 @@ func (a *Authenticator) Callback(c *fiber.Ctx) fiber.Handler {
 
 func (a *Authenticator) Logout(c *fiber.Ctx) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		logoutUrl := "https://" + os.Getenv("AUTH0_DOMAIN") + "/v2/logout"
+		domain := viper.GetString("auth0.domain")
+
+		logoutUrl := "https://" + domain + "/v2/logout"
 
 		scheme := "http"
 		if c.Protocol() == "https" {
@@ -147,7 +167,8 @@ func (a *Authenticator) Logout(c *fiber.Ctx) fiber.Handler {
 		}
 
 		returnTo := scheme + "://" + c.Hostname()
-		parameters := "returnTo=" + returnTo + "&client_id=" + os.Getenv("AUTH0_CLIENT_ID")
+		client_id := viper.GetString("auth0.client_id")
+		parameters := "returnTo=" + returnTo + "&client_id=" + client_id
 
 		return c.Redirect(logoutUrl + "?" + parameters)
 	}
@@ -166,6 +187,16 @@ func (a *Authenticator) GetUser(c *fiber.Ctx) fiber.Handler {
 	}
 }
 
+// // IsAuthenticated is a middleware that checks if
+// // the user has already been authenticated previously.
+//
+//	func IsAuthenticated(ctx *gin.Context) {
+//		if sessions.Default(ctx).Get("profile") == nil {
+//			ctx.Redirect(http.StatusSeeOther, "/")
+//		} else {
+//			ctx.Next()
+//		}
+//	}
 func generateRandomState() (string, error) {
 	b := make([]byte, 32)
 	_, err := rand.Read(b)

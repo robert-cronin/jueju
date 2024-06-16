@@ -1,0 +1,45 @@
+# Copyright 2024 Robert Cronin
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+auth0:
+    callback_url: https://jueju.robertcronin.com/api/callback
+    redirect_uri: https://jueju.robertcronin.com
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age: []
+    lastmodified: "2024-06-16T08:28:21Z"
+    mac: ENC[AES256_GCM,data:YAD9iBoqyirELuPhauXBDClwMusYCC0lghwLBv+OfW3G+Ir6Ipc0DqknZiUa4zleznXuO2qAgejkGVypKth1mAzDQrH/SBhIDuvlcxKaB7yN10egBZllw1UMqUSZk3bVjtPbwKIbWB43FKrDb29Nbw35oMA9lKFMAsoWScc1PiA=,iv:SBwfSIy6vowjkjOBb5wlrxdnD1XTdSezW0FRu0BqDoI=,tag:CShRVAILBEOfGs8I5dyQGQ==,type:str]
+    pgp:
+        - created_at: "2024-06-16T08:28:21Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hQGMA6eqXQ0/huC+AQv/aN+C+W9JFFpvd3KkGNxHqtFTJrVLaxRqxn5VxBGx+YWN
+            l8LQcodZIa1fiAr80HVxi258iykO6a5G8mdKMix3ZRP+T0+C1Xin+txqg/151Acu
+            kINpz48FiJJb/23q9VxgnTpbku6ah/B+dpHVYQC+f8DTc2iLEYrSh7FquIeTjJ8d
+            lasb9X75oon2VtQvxJBACp/QF4Le3wAIQ0LcPDfawSWPZbNPZ6Ea8HCRAOiOo7dv
+            ad/ngYMt+Kwr+iUYjVa6DFvnkik6AV3qNk4bfgiyM6+cyxZ3qkP5ckFasWhIBdw0
+            mirSRQQ77EX7Gu4AStAikizOj9ThLc592FJHn79bs1CSfGKHgNvT7H1glEcMt534
+            LFEkvAlUoC9dzPQwfmldwLAwk2D6sc1UFl+TaxyoVrDWJpAhwhYhnnaZcaCY7AEH
+            2gjllYeJPleAxGAQBIbbhiJUsPIg8avskMyhlY8n2FT9eG2j9HhfGK7RTr4X+43Y
+            RH+igux59xwf9r/qCetd0l4BSrWD0ba6iJKU4zChjwJp1dH3AJS7uNxLQf+zAF3l
+            23hpUfA2jORYAZd3Uxc3I++7dhfXb2gO640wHCZ5BzuRFTrYB98zOJY9oneOD8aO
+            KTNrqBlrrgeQqLIkZG/6
+            =b2wd
+            -----END PGP MESSAGE-----
+          fp: 17D956D69F581977E848FC9FA228985D4ABDC074
+    encrypted_regex: (?i)id|secret|domain
+    version: 3.8.1

@@ -64,9 +64,22 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
-          envFrom:
-            - secretRef:
-                name: jueju
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config/config.yaml
+              subPath: config.yaml
+              readOnly: true
+            - name: config-prod-volume
+              mountPath: /app/config/config.production.yaml
+              subPath: config.production.yaml
+              readOnly: true
+      volumes:
+        - name: config-volume
+          secret:
+            secretName: config
+        - name: config-prod-volume
+          secret:
+            secretName: config-prod
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

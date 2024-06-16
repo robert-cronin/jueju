@@ -37,8 +37,8 @@ WORKDIR /root/
 
 COPY --from=builder /app/main .
 
-ENV GIN_MODE=release
+ENV ENV=production
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["./main"]

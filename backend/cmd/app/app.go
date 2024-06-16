@@ -20,8 +20,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/joho/godotenv"
 	"github.com/robert-cronin/jueju/backend/internal/api"
+	"github.com/robert-cronin/jueju/backend/internal/config"
 	"github.com/robert-cronin/jueju/backend/internal/server"
 )
 
@@ -31,9 +31,7 @@ func middleware(c *fiber.Ctx) error {
 }
 
 func Bootstrap() {
-	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found, resorting to the environment")
-	}
+	config.InitConfig()
 
 	srv := server.NewServer()
 

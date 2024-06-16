@@ -21,22 +21,24 @@ tasks:
 
   encrypt:
     cmds:
-      - "sops --encrypt .env > .enc.env"
+      - "sops --encrypt config/config.yaml > config/enc.config.yaml"
+      - "sops --encrypt config/config.development.yaml > config/enc.config.development.yaml"
+      - "sops --encrypt config/config.production.yaml > config/enc.config.production.yaml"
 
   decrypt:
     cmds:
-      - "sops --decrypt .enc.env > .env"
-
-  edit:
-    cmds:
-      - "sops .enc.env"
+      - "sops --decrypt config/enc.config.yaml > config/config.yaml"
+      - "sops --decrypt config/enc.config.development.yaml > config/config.development.yaml"
+      - "sops --decrypt config/enc.config.production.yaml > config/config.production.yaml"
 
   run:
     cmds:
       - "go run main.go"
 
   k8s-secret:
-    desc: "This puts the .env file into a k8s secret. Requires the \"jueju\" namespace to exist."
+    desc: 'This puts the .env file into a k8s secret. Requires the "jueju" namespace to exist.'
     cmds:
-      - "kubectl delete secret jueju -n jueju --ignore-not-found"
-      - "kubectl create secret generic jueju --from-env-file=.env -n jueju"
+      - "kubectl -n jueju delete secret config --ignore-not-found"
+      - "kubectl -n jueju create secret generic config --from-file=config.yaml=./config/config.yaml"
+      - "kubectl -n jueju delete secret config-prod --ignore-not-found"
+      - "kubectl -n jueju create secret generic config-prod --from-file=config.production.yaml=./config/config.production.yaml"
