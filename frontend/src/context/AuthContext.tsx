@@ -24,7 +24,6 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAPI } from "@/context/APIContext";
-import * as api from "@clients/v1.0";
 
 interface AuthContextType {
   user: any | null;
@@ -56,11 +55,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   const goToLogin = () => {
-    window.location.href = "/api/login";
+    api.login();
   };
 
   const goToLogout = () => {
-    navigate("/api/logout");
+    api.logout();
+    setUser(null);
+    navigate("/");
   };
 
   const getUser = async () => {
