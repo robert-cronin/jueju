@@ -82,6 +82,36 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * 
+         * @summary Callback from Auth0
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        callback: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/callback`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get user information
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -140,6 +170,36 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Logs out current logged in user session
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logout: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -150,6 +210,18 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 export const DefaultApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @summary Callback from Auth0
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async callback(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Error>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.callback(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.callback']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * 
          * @summary Get user information
@@ -174,6 +246,18 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.login']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Logs out current logged in user session
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async logout(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Error>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.logout(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.logout']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -184,6 +268,15 @@ export const DefaultApiFp = function(configuration?: Configuration) {
 export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = DefaultApiFp(configuration)
     return {
+        /**
+         * 
+         * @summary Callback from Auth0
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        callback(options?: any): AxiosPromise<Error> {
+            return localVarFp.callback(options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @summary Get user information
@@ -202,6 +295,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         login(options?: any): AxiosPromise<Error> {
             return localVarFp.login(options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Logs out current logged in user session
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logout(options?: any): AxiosPromise<Error> {
+            return localVarFp.logout(options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -212,6 +314,17 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class DefaultApi extends BaseAPI {
+    /**
+     * 
+     * @summary Callback from Auth0
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public callback(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).callback(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Get user information
@@ -232,6 +345,17 @@ export class DefaultApi extends BaseAPI {
      */
     public login(options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).login(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Logs out current logged in user session
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public logout(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).logout(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -1,5 +1,3 @@
-//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen --config=cfg.yaml ../../docs/openapi.yaml
-
 // Copyright 2024 Robert Cronin
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package server
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/robert-cronin/jueju/backend/internal/api"
+	"github.com/robert-cronin/jueju/backend/internal/authenticator"
+)
 
 // ensure that we've conformed to the `ServerInterface` with a compile-time check
-var _ ServerInterface = (*Server)(nil)
+var _ api.ServerInterface = (*Server)(nil)
 
-type Server struct{}
+type Server struct {
+	auth *authenticator.Authenticator
+	store *session.Store
+}
+
+// Callback implements api.ServerInterface.
+func (s *Server) Callback(c *fiber.Ctx) error {
+	handler := s.auth.Callback(c)
+	return handler(c)
+}
+
+// Logout implements api.ServerInterface.
+func (s *Server) Logout(c *fiber.Ctx) error {
+	handler := s.auth.Logout(c)
+	return handler(c)
+}
 
 // GetUser implements ServerInterface.
 func (s Server) GetUser(c *fiber.Ctx) error {
@@ -34,9 +52,22 @@ func (s Server) GetUser(c *fiber.Ctx) error {
 
 // Login implements ServerInterface.
 func (s Server) Login(c *fiber.Ctx) error {
-	panic("unimplemented")
+	handler := s.auth.Login(c)
+	return handler(c)
 }
 
-func NewServer() Server {
-	return Server{}
+func NewServer() *Server {
+	auth, err := authenticator.NewAuthenticator()
+	if err != nil {
+		panic(err)
+	}
+
+	store := session.New()
+
+	srv := &Server{
+		auth: auth,
+		store: store,
+	}
+
+	return srv
 }

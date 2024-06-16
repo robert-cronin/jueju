@@ -37,6 +37,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /logout:
+    get:
+      summary: Logs out current logged in user session
+      operationId: logout
+      responses:
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /callback:
+    get:
+      summary: Callback from Auth0
+      operationId: callback
+      responses:
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /user:
     get:
       summary: Get user information

@@ -42,9 +42,15 @@ type User struct {
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// Callback from Auth0
+	// (GET /callback)
+	Callback(c *fiber.Ctx) error
 	// Logs user into the system via Auth0
 	// (GET /login)
 	Login(c *fiber.Ctx) error
+	// Logs out current logged in user session
+	// (GET /logout)
+	Logout(c *fiber.Ctx) error
 	// Get user information
 	// (GET /user)
 	GetUser(c *fiber.Ctx) error
@@ -57,10 +63,22 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc fiber.Handler
 
+// Callback operation middleware
+func (siw *ServerInterfaceWrapper) Callback(c *fiber.Ctx) error {
+
+	return siw.Handler.Callback(c)
+}
+
 // Login operation middleware
 func (siw *ServerInterfaceWrapper) Login(c *fiber.Ctx) error {
 
 	return siw.Handler.Login(c)
+}
+
+// Logout operation middleware
+func (siw *ServerInterfaceWrapper) Logout(c *fiber.Ctx) error {
+
+	return siw.Handler.Logout(c)
 }
 
 // GetUser operation middleware
@@ -90,7 +108,11 @@ func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, option
 		router.Use(fiber.Handler(m))
 	}
 
+	router.Get(options.BaseURL+"/callback", wrapper.Callback)
+
 	router.Get(options.BaseURL+"/login", wrapper.Login)
+
+	router.Get(options.BaseURL+"/logout", wrapper.Logout)
 
 	router.Get(options.BaseURL+"/user", wrapper.GetUser)
 
@@ -99,15 +121,16 @@ func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, option
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8xTPW/bMBD9K8S1oyoqTlEE3IzWCBwYRYA2U+CBkM4SW4lkyZMNI9B/L0jKSSrL7dIh",
-	"k0589/He8fEJStNZo1GTB/EEvmywkzFcOWdcCKwzFh0pjMelqTB8K/SlU5aU0SBSMotYBjvjOkkgQGm6",
-	"XkAGdLSYfrFGB0MGHXov64uNTvBzqSendA3DkIHDX71yWIF4hHHgKX07ZPDgcYa13EuS7nxcyGYjeDYs",
-	"A1VdKFl/mej89HFWp5YdXmgRoZmZWpU//1Z2gv+1G1XBOH87BEzpnTnv+b1RninPqEF21+Ndz5b3a8ig",
-	"VSVqH0kkMrC0smyQLfICMuhdCwIaIusF54fDIZcRzo2r+Vjr+Wb9efX12+rDIi/yhro2yCNFbWj3etge",
-	"nU90rvIiL0KasailVSDgOh5lYCU18S55a2qlQ1QjhU+4aBn0rCsQsIlo2IW3JtBIoneybykZWBPqGEpr",
-	"W1XGUv7DG/3yAkL03uEOBLzjL0+Ej++Dp8cR9zrn39PseCm+7zrpjomaZ324RaXJxJ37oyfs2F5Jtuyp",
-	"KWIF70cTzwq8RYomn0hcFMV/kxf7z6h7SNyT8cNRzHgLq71FOm32FbuYgy74C8Tj1PsbU8qWJfwPTwvO",
-	"24A1xpO4KW4KLq3i+ysYsmmPe2eqvgw/00bPNdvhdwAAAP//6DpSZmYFAAA=",
+	"H4sIAAAAAAAC/8xUTU/cPBD+K9a87zGNw1JVyDdEEVq0qpBaToiD68wmLo7t2uNFCOW/V3Y2lC679NLD",
+	"nmLnmY/n8Xw8g3KDdxYtRRDPEFWPgyzHyxBcyAcfnMdAGstv5VrM3xajCtqTdhbEZMwKVsHahUESCNCW",
+	"ThdQAT15nK7YYYCxggFjlN3BQDP84hopaNvBOFYQ8GfSAVsQd7BNOJvfjxXcRtzDWm4kyfA2XbZmW/BN",
+	"sgp0e8Bl+XlH56ePe3VaOeCBEAXak9Nq9fCe2wz/7W10C9v892PGtF27tzG/9ToyHRn1yK4TXid2frOE",
+	"CoxWaGMhMZGBcy9Vj2xRN1BBCgYE9EQ+Cs4fHx9rWeDahY5vfSNfLS8uv3y9/LCom7qnwWR5pMnkcK+T",
+	"bTDEic5J3dRNNnMerfQaBJyWXxV4SX2pJVfSmO9SPeRLh5Q/udYyS1q2IOBiNsgvEr3LZCbpa5kMTW1s",
+	"CW05Su+NVsWb/4iZxjwH+fR/wDUI+I//HhS+nRI+jUh53X1dPOcupYlpGGR4esWOrYMb2HmivikW3LhO",
+	"24OiVgU9SkUr10WWcndqS670UnyKhAPbaLmj0CV6T2KGj1ejS8RUCgEtMeO6Dlum7aQ8Yiw9XHSm7RLa",
+	"q/IKqSypHZmLpvlnEkv8PQpvpxpNi6uwrY7kea+Q5g56xa7YYMj7AcTd7u5aOSUNm/A/dpLg3GSsd5HE",
+	"WXPWcOk135zAWO3GuAmuTSpfdgO9+NyPvwIAAP//YERhaiYHAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
