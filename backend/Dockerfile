@@ -33,7 +33,7 @@ ENTRYPOINT ["main"]
 
 FROM alpine:latest  
 
-WORKDIR /root/
+WORKDIR /app/
 
 COPY --from=builder /app/main .
 

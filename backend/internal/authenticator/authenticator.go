@@ -160,13 +160,9 @@ func (a *Authenticator) Logout(c *fiber.Ctx) fiber.Handler {
 		domain := viper.GetString("auth0.domain")
 
 		logoutUrl := "https://" + domain + "/v2/logout"
+		
+		returnTo := viper.GetString("auth0.redirect_uri")
 
-		scheme := "http"
-		if c.Protocol() == "https" {
-			scheme = "https"
-		}
-
-		returnTo := scheme + "://" + c.Hostname()
 		client_id := viper.GetString("auth0.client_id")
 		parameters := "returnTo=" + returnTo + "&client_id=" + client_id
 

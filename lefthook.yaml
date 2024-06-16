@@ -15,6 +15,8 @@
 pre-commit:
   commands:
     lint-backend:
-      run: golangci-lint run ./backend/...
+      run: golangci-lint run ./...
+      root: backend
     lint-frontend:
       run: npm run lint
+      root: frontend
