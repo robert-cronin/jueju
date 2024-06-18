@@ -45,8 +45,10 @@ func InitDB() {
 	}
 
 	// Seed the database
-	err = seedUsers(db)
-	if err != nil {
-		panic(err)
+	if viper.GetString("env") != "production" {
+		err = seedUsers(db)
+		if err != nil {
+			panic(err)
+		}
 	}
 }

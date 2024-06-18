@@ -19,7 +19,7 @@ import (
 )
 
 type Poem struct {
-	ID          uuid.UUID `gorm:"primaryKey"`
+	ID          uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
 	Title       string    `gorm:"not null"`
 	Content     string    `gorm:"type:text;not null"`
 	Translation string    `gorm:"type:text"`

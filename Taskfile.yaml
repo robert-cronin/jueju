@@ -62,3 +62,8 @@ tasks:
     desc: "Stop and remove PostgreSQL and pgAdmin containers"
     cmds:
       - docker compose -f ./backend/local-db/docker-compose.yaml down
+
+  fwd-pgadmin:
+    desc: "Forward pgAdmin to localhost"
+    cmds:
+      - kubectl port-forward -n jueju-db deployment/jueju-db-pgadmin4 8080:80

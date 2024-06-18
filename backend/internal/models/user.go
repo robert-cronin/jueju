@@ -17,7 +17,7 @@ package models
 import "github.com/google/uuid"
 
 type User struct {
-	ID       uuid.UUID `gorm:"primaryKey"`
+	ID       uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
 	UID      string    `gorm:"uniqueIndex;not null"`
 	Username string    `gorm:"uniqueIndex;not null"`
 	Email    string    `gorm:"uniqueIndex;not null"`

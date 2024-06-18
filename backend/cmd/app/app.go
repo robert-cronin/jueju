@@ -17,6 +17,7 @@ package app
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -24,6 +25,7 @@ import (
 	"github.com/robert-cronin/jueju/backend/internal/config"
 	"github.com/robert-cronin/jueju/backend/internal/database"
 	"github.com/robert-cronin/jueju/backend/internal/server"
+	"github.com/spf13/viper"
 )
 
 func middleware(c *fiber.Ctx) error {
@@ -32,6 +34,13 @@ func middleware(c *fiber.Ctx) error {
 }
 
 func Bootstrap() {
+	// Get the environment variable
+	env := os.Getenv("ENV")
+	if env == "" {
+		env = "development"
+	}
+	viper.Set("env", env)
+
 	// Load the configuration
 	config.InitConfig()
 

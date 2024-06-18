@@ -17,7 +17,6 @@ package config // viper is a popular configuration library for Go
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/spf13/viper"
 )
@@ -32,11 +31,7 @@ func InitConfig() {
 		log.Fatalf("Error reading base config file, %s", err)
 	}
 
-	// Get the environment variable
-	env := os.Getenv("ENV")
-	if env == "" {
-		env = "development"
-	}
+	env := viper.GetString("env")
 
 	// Load environment-specific configuration
 	viper.SetConfigName(fmt.Sprintf("config.%s", env))

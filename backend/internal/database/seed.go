@@ -26,13 +26,11 @@ import (
 func seedUsers(db *gorm.DB) error {
 	users := []models.User{
 		{
-			ID:       uuid.New(),
 			UID:      uuid.New().String(),
 			Username: "user1",
 			Email:    "user1@robertcronin.com",
 		},
 		{
-			ID:       uuid.New(),
 			UID:      uuid.New().String(),
 			Username: "user2",
 			Email:    "user2@robertcronin.com",
