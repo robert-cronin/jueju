@@ -52,3 +52,13 @@ tasks:
     desc: "Generate OpenAPI documentation"
     cmds:
       - ./scripts/generate-openapi.sh
+
+  db-up:
+    desc: "Start PostgreSQL and pgAdmin containers"
+    cmds:
+      - docker compose -f ./backend/local-db/docker-compose.yaml up -d
+
+  db-down:
+    desc: "Stop and remove PostgreSQL and pgAdmin containers"
+    cmds:
+      - docker compose -f ./backend/local-db/docker-compose.yaml down

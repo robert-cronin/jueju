@@ -22,6 +22,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/robert-cronin/jueju/backend/internal/api"
 	"github.com/robert-cronin/jueju/backend/internal/config"
+	"github.com/robert-cronin/jueju/backend/internal/database"
 	"github.com/robert-cronin/jueju/backend/internal/server"
 )
 
@@ -31,16 +32,23 @@ func middleware(c *fiber.Ctx) error {
 }
 
 func Bootstrap() {
+	// Load the configuration
 	config.InitConfig()
 
+	// Connect to the database
+	database.InitDB()
+
+	// Create the server
 	srv := server.NewServer()
 
+	// Create the Fiber app
 	app := fiber.New()
-	apiGroup := app.Group("/api", middleware)
-
 	app.Use(cors.New())
 
+	// Register the API handlers
+	apiGroup := app.Group("/api", middleware)
 	api.RegisterHandlers(apiGroup, srv)
 
+	// Start the server
 	log.Fatal(app.Listen("0.0.0.0:3000"))
 }
