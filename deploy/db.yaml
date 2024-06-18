@@ -27,3 +27,30 @@ spec:
 
   storage:
     size: 1Gi
+---
+# Service entry for istio
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: jueju-db-rw-entry
+  namespace: jueju
+spec:
+  hosts:
+    - jueju-db-rw.jueju-db.svc.cluster.local
+  ports:
+    - number: 5432
+      name: postgres
+      protocol: TCP
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: jueju-db-rw
+  namespace: jueju
+spec:
+  host: jueju-db-rw.jueju-db.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE

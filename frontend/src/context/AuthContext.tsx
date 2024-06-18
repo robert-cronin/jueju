@@ -15,32 +15,18 @@
 
 import LandingPage from "@/pages/Landing";
 import LoadingScreen from "@/pages/Loading";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAPI } from "@/context/APIContext";
 
-interface AuthContextType {
+type AuthContextType = {
   user: object | null;
   goToLogin: () => void;
   goToLogout: () => void;
   loading: boolean;
-}
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -67,7 +53,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const getUser = async () => {
     try {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await api.getUser();
       const { data } = response;
       setUser(data);
@@ -93,4 +78,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export { AuthProvider, useAuth };
+export default AuthProvider;
+export { AuthContext };
+export type { AuthContextType };

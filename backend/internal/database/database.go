@@ -25,8 +25,11 @@ var db *gorm.DB
 
 // InitDB initialises a new database connection.
 func InitDB() {
-	// Get the dsn from the environment
+	// Get the dsn from the environment (default to db.dsn but if that isnt set, get from the environment)
 	dsn := viper.GetString("db.dsn")
+	if dsn == "" {
+		dsn = viper.GetString("DATABASE_URI")
+	}
 
 	// Connect to the database
 	var err error

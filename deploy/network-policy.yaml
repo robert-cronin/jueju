@@ -11,10 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-creation_rules:
-  - path_regex: 'config.*\.yaml$'
-    encrypted_regex: "(?i)id|secret|domain|dsn"
-    key_groups:
-      - pgp:
-          - 17D956D69F581977E848FC9FA228985D4ABDC074

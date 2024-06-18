@@ -6,8 +6,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/theme/Theme.ts";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "@/context/AuthContext";
-import { APIProvider } from "./context/APIContext";
+import { APIProvider } from "@/context/APIContext";
+import AuthProvider from "@/context/AuthContext";
 
 // define global styles
 const GlobalStyle = createGlobalStyle`

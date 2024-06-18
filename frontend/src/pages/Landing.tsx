@@ -14,8 +14,8 @@
 
 import React from "react";
 import { Container, Button, Typography, Paper, Divider } from "@mui/material";
-import { useAuth } from "@/context/AuthContext";
 import { styled } from "@mui/system";
+import useAuth from "@/hooks/useAuth";
 
 const LandingContainer = styled(Container)`
   display: flex;

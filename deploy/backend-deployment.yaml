@@ -64,6 +64,12 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
+          env:
+            - name: DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: jueju-db-app
+                  key: uri
           volumeMounts:
             - name: config-volume
               mountPath: /app/config/config.yaml

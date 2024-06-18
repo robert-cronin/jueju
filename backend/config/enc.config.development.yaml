@@ -14,32 +14,34 @@
 auth0:
     callback_url: http://localhost:3000/api/callback
     redirect_uri: http://localhost:5173
+db:
+    dsn: ENC[AES256_GCM,data:zhcoczSfIXq6AxO9txRnGkGLES3umtBPQZv+/TqkewzzaILrE6/Cs2DBuDelM8zWOM9slwK+B/vVQtr6,iv:KRV37MVNf9L9aAWrt8j2+fmrHIS/3t/bhBGMUlbuWpY=,tag:lSLCy2q1VeHvdbuXd2/3Lg==,type:str]
 sops:
     kms: []
     gcp_kms: []
     azure_kv: []
     hc_vault: []
     age: []
-    lastmodified: "2024-06-16T08:28:21Z"
-    mac: ENC[AES256_GCM,data:hIAglI2OdqYmZSzaxi+sd3s3Zf/cyF6b51wpwR3fV6BfsGgago50zdY4p4r5dmB+BKSLvgZhm3bBNxhxxeroMQw4q8xFITpembxollmjxQPOsOgqWp5V0L1hF3foukOmhzhFV8JC564KGIcJTG6B6dqTpTf4XApUpbMNkyEvalI=,iv:Rmp+w1uUMDP3dGvin1hxlUpS/jA5pRpcajNQBbfLKcg=,tag:mH8FPi+BpmNTyS+mq1JWiw==,type:str]
+    lastmodified: "2024-06-18T11:12:15Z"
+    mac: ENC[AES256_GCM,data:ZhVTOV9ARct421crL7NfeqqPZZE9vq7y5AhCtweX6mzkBD4oFb/CW2cT2E4J5KefLhWDEVjG6Q9Y5W60nFhOvN7LrIWRt+C6039zhd5i/HMYc7UN+3Gk9GFI+FMQdn7+biQuAYzTyzyAJJ3d9V+mYzD0cPnpktsurJoz9t2BFUM=,iv:Mqwji7B1KFQgE7lzTi3wp0Sn14wJSu7BO99DwOO3Brg=,tag:rWnYm7IHsHfle4Dkkb+UgA==,type:str]
     pgp:
-        - created_at: "2024-06-16T08:28:21Z"
+        - created_at: "2024-06-18T11:12:15Z"
           enc: |-
             -----BEGIN PGP MESSAGE-----
 
-            hQGMA6eqXQ0/huC+AQv9HT+h1zyzeCrd5drKmCdbEhu0xt3ZIoAt9RTgeWR+4Oq+
-            /mjdiYg7wucSyTHYKe4fksI5hfJD8qg5c0tfif8kZrpZ62SHPAYdufbj1zAEp9b6
-            e/JBxRnxA0G+zrCLntjyqmva/NIsnjCOUm6wSNMCTki0PSZasWbZI6YKYsiYP6eH
-            XOd+NxHE5dC6+uM36klyL4lQI/cd4+IvYzxqU3Sz3lj8/5W4owno6ITKP1mCCUyS
-            aDjcJw19smi+6FyFJKSL5QxnkwBsu+Y2d1XOq4UTSaWM/f+295wsjvoiJ6D7YAkj
-            FyldDgbdAFTlJPmpYggOzMSHw5yY2/gpIZUEJlbA8c1ihS6eqziRnwPsjD4yrOTw
-            kYR7BWrqPn22sOFZHREdPRai7bOXPAlKLGQSSH6LIpzKrUKJ7tqMgEUqQ0oeuYPu
-            NBA9fMvm3bvxNW9+xKpop+rwce972xegouQ9RS7cpxkA2fLJiynBNm/0zVhwgmvT
-            IbVrSNW+lXpVg7lXiCrA0l4BXLkeKZcVhhv5gjFLrU2kVBSNDIx+/qw3UMYc6D2j
-            9gnjLSrGevmNLqnF/SeqcxdvUrtOqUpIkg7aybr0edp+hONfe2mOG/Xs+jkxE9r9
-            QR8A6hCnJqpPQKgASXeS
-            =kwy7
+            hQGMA6eqXQ0/huC+AQv+OlyfCZ82e56oEj5io4cUn3kUXz4XwX2c5/fGUKx/NbvL
+            KLBCTNjKnlsmKRMQrn20Mrv0JM6kfzJKfzHmw+AoAHs2adlDHpwbky08HUcRRoqG
+            lQqJRgqL1KCvHqh5TgvjYp+5atc1Ft4n6rJBq8SM/YCNN5QZWILH41acAn4PRNjH
+            X+sN8vqLMlrGaZFpNZEKfmwhD0m17Xhad9yts6+D5Xc869DbyVvmUH1Ldvd0RbQm
+            JICq6Hm153gHgBwSddGFa5SvGXWJVJvKh1FW0oyufqhF0zq9AraXjSxeIKMxCBom
+            PrD/6c/+fpKCw3N9ddFowxX0qg0pTzarmf9j708NN9H9wJolet1tepYfU2FY1PYg
+            yt/57TRKkfVRVyY2mtVcFuTRoK49w4l1R8cFeeiqkUKGW+NMFpyze++pkuc4/Whr
+            v1+K50vwgDf1fRsUMVWmgTnIpOqLR5IHHU2U0Y/dNg7yLP1ZZ8XWszIk9WPkLsuW
+            8wxXkBKu8Keiriq9873A0lwBdAfGeJP1AyfqrmzDc5FydOrRVkHhg08i3ZOkEyET
+            o/eRY7x1xN+QCGQEsYemhsYaJ6A4Z20Oitk4T5P6MwoBFVMz3i2IiyHU+bxYqcbK
+            aIcWIVmL6T9hnlcNcw==
+            =VqXY
             -----END PGP MESSAGE-----
           fp: 17D956D69F581977E848FC9FA228985D4ABDC074
-    encrypted_regex: (?i)id|secret|domain
+    encrypted_regex: (?i)id|secret|domain|dsn
     version: 3.8.1
