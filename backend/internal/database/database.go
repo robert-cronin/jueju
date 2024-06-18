@@ -23,19 +23,26 @@ import (
 
 var db *gorm.DB
 
-// NewDB creates a new database connection.
+// InitDB initialises a new database connection.
 func InitDB() {
 	// Get the dsn from the environment
 	dsn := viper.GetString("db.dsn")
 
+	// Connect to the database
 	var err error
-
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
+	// Migrate the database
 	err = db.AutoMigrate(&models.User{}, &models.Poem{})
+	if err != nil {
+		panic(err)
+	}
+
+	// Seed the database
+	err = seedUsers(db)
 	if err != nil {
 		panic(err)
 	}

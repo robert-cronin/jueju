@@ -14,9 +14,12 @@
 
 package models
 
+import "github.com/google/uuid"
+
 type User struct {
-	ID       uint   `gorm:"primaryKey"`
-	Username string `gorm:"uniqueIndex;not null"`
-	Email    string `gorm:"uniqueIndex;not null"`
-	Poems    []Poem `gorm:"foreignKey:UserID"`
+	ID       uuid.UUID `gorm:"primaryKey"`
+	UID      string    `gorm:"uniqueIndex;not null"`
+	Username string    `gorm:"uniqueIndex;not null"`
+	Email    string    `gorm:"uniqueIndex;not null"`
+	Poems    []Poem    `gorm:"foreignKey:UserID"`
 }

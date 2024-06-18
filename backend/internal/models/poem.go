@@ -14,15 +14,15 @@
 
 package models
 
-import "time"
+import (
+	"github.com/google/uuid"
+)
 
 type Poem struct {
-	ID          uint   `gorm:"primaryKey"`
-	Title       string `gorm:"not null"`
-	Content     string `gorm:"type:text;not null"`
-	Translation string `gorm:"type:text"`
-	UserID      uint   `gorm:"not null"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	User        User `gorm:"foreignKey:UserID"`
+	ID          uuid.UUID `gorm:"primaryKey"`
+	Title       string    `gorm:"not null"`
+	Content     string    `gorm:"type:text;not null"`
+	Translation string    `gorm:"type:text"`
+	UserID      uuid.UUID `gorm:"not null"`
+	User        User      `gorm:"foreignKey:UserID"`
 }

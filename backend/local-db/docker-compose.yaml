@@ -11,8 +11,6 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -32,6 +30,3 @@ services:
     volumes:
       - ./pgpass:/pgpass
       - ./servers.json:/pgadmin4/servers.json
-
-volumes:
-  pgdata:
