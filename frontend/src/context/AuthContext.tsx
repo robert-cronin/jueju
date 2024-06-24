@@ -15,9 +15,14 @@
 
 import LandingPage from "@/pages/Landing";
 import LoadingScreen from "@/pages/Loading";
-import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAPI } from "@/context/APIContext";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
+import useAPI from "@/hooks/useAPI";
 
 type AuthContextType = {
   user: object | null;
@@ -38,19 +43,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const { api } = useAPI();
 
-  const navigate = useNavigate();
-
-  const goToLogin = () => {
-    api.login();
+  const goToLogin = async () => {
+    window.location.href = import.meta.env.VITE_API_BASE_PATH + "/login";
   };
 
   const goToLogout = () => {
-    api.logout();
-    setUser(null);
-    navigate("/");
+    window.location.href = import.meta.env.VITE_API_BASE_PATH + "/logout";
   };
 
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     try {
       setLoading(true);
       const response = await api.getUser();
@@ -61,11 +62,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [api]);
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [getUser]);
 
   if (loading) {
     return <LoadingScreen />;

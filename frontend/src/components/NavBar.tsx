@@ -19,8 +19,10 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import useAuth from "@/hooks/useAuth";
 
 const NavBar = () => {
+  const { goToLogout } = useAuth();
   return (
     <AppBar position="static">
       <Toolbar>
@@ -36,7 +38,12 @@ const NavBar = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Jueju
         </Typography>
-        <Button color="inherit" component={Link} to="/login">
+        <Button
+          color="inherit"
+          component={Link}
+          to="/"
+          onClick={() => goToLogout()}
+        >
           Logout
         </Button>
       </Toolbar>

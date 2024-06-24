@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { ReactNode, createContext, useContext } from "react";
+import React, { ReactNode, createContext } from "react";
 import * as clients from "@clients/v1.0";
 
 interface APIContextType {
@@ -20,14 +20,6 @@ interface APIContextType {
 }
 
 const APIContext = createContext<APIContextType | undefined>(undefined);
-
-const useAPI = (): APIContextType => {
-  const context = useContext(APIContext);
-  if (!context) {
-    throw new Error("useAPI must be used within an APIProvider");
-  }
-  return context;
-};
 
 interface APIProviderProps {
   children: ReactNode;
@@ -37,10 +29,15 @@ const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
   const basePath = import.meta.env.VITE_API_BASE_PATH;
   const configuration = new clients.Configuration({
     basePath,
+    baseOptions: {
+      withCredentials: true,
+    },
+    
   });
   const api = new clients.DefaultApi(configuration);
 
   return <APIContext.Provider value={{ api }}>{children}</APIContext.Provider>;
 };
 
-export { APIProvider, useAPI };
+export { APIProvider, APIContext };
+export type { APIContextType };

@@ -70,6 +70,11 @@ spec:
                 secretKeyRef:
                   name: jueju-db-app
                   key: uri
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: redis-password
           volumeMounts:
             - name: config-volume
               mountPath: /app/config/config.yaml

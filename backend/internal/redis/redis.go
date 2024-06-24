@@ -54,10 +54,12 @@ func New(cfg Config) (*redis.Client, error) {
 
 // Init creates a new global Redis client
 func Init() {
+	// Get password from environment variable (injected by k8s or empty if on local)
+	password := viper.GetString("REDIS_PASSWORD")
 	cfg := Config{
 		Host:     viper.GetString("redis.host"),
 		Port:     viper.GetInt("redis.port"),
-		Password: viper.GetString("redis.password"),
+		Password: password,
 		DB:       viper.GetInt("redis.db"),
 	}
 

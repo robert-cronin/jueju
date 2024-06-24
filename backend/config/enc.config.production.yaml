@@ -13,32 +13,38 @@
 # limitations under the License.
 auth0:
     callback_url: https://jueju.robertcronin.com/api/callback
-    redirect_uri: https://jueju.robertcronin.com
+    redirect_url: https://jueju.robertcronin.com
+redis:
+    host: redis-master.redis.svc.cluster.local
+    port: 6379
+    db: 0
+session:
+    secure: true
 sops:
     kms: []
     gcp_kms: []
     azure_kv: []
     hc_vault: []
     age: []
-    lastmodified: "2024-06-18T11:12:15Z"
-    mac: ENC[AES256_GCM,data:50QUFEjQHy2ul8doLarDcIvJU3/iviGtwzAHpwVxlHdwNKWHMlDWJXj0jmoRo6+4CX0wzNGwUjgQeW/M+kKXUC7yiuLX4sVTk9aCXAaXzJfB0Ab7t36Nb9JX/7jTLs9puWn7K00TBVnocA9G3i3MefWVg1C1l7xr6dhsyqd+AwI=,iv:+yoDyYjoYaGA8tGo4oNbR7JjvPg1H/ekiELi/oc9+mM=,tag:pPF2x0EGmHyPw0W2kwI7ww==,type:str]
+    lastmodified: "2024-06-24T08:43:44Z"
+    mac: ENC[AES256_GCM,data:MkSiMOnFX+N4ecTD0HLzHBRN+ooM0Iih4VkijshD2MSX/Ff+xkM1uP98VH8y3O6e7Rv5eL5WAznp1ia8YHru7tV+tKEi3couBUte0ZUWX/ryOW9PFNl/zQdD7NJNYqxcvM7GBT3bjmUBAHuLo+OkQBXJMgk2tMVQJqSNGoAsplM=,iv:V7fqnJHPjt+pFhQECHYbwJwjk+vFdur1En9oJaM5gIo=,tag:75wgMD276lp4m1wfDm2meQ==,type:str]
     pgp:
-        - created_at: "2024-06-18T11:12:15Z"
+        - created_at: "2024-06-24T08:43:44Z"
           enc: |-
             -----BEGIN PGP MESSAGE-----
 
-            hQGMA6eqXQ0/huC+AQv/UeWAxXZn7Rfoq25jiOyKoT+X9rx75f87L1KjpuoD87mv
-            34fCfAe4zlRFTpl0DSTupv9kYgEYg4xRygILO6UxGoVuysI4/9kHZhTvRVCw68NF
-            eyxPpppIUx3gbFxmoAI64mJ8dgnjmBpJVzHMFdPWBkGHzurOyaH4DrXCq614yOQ3
-            iKMhcBQbofI5sK4dSzzWAqM72tec6f9JHCPsfFa+u7BzTwZT4hjAfqTgxPpcczwT
-            XES5TQwuNpkBm1EcGtFXziL2Fp1H8j+1tzFKCjGllhZq+NkSCvESvkoB/xbAj3RJ
-            XQjJPUDc2Qsh773Eu7Z4UnJzMh9X5eLBt//V978fluJB3AQ035k7MtAfR1GFdq1v
-            yK8whvvHWocwBaBwqLZPGrKJPlGwn0cT1BIM5i+xuGctAw+ztHG+qCA5JJf4P8RS
-            bM87HYr22KWYaQJRdO0kvHbgqHnk5PwMGloL7jevr9JPKPKoOkBT8FTH4NrN57Db
-            IiR2PAd8fAygt8BcEQ2P0l4BPHqovX8o3sjZwVQBEUlAcxwyqZHHDVOyB9wdbzrz
-            uDtnw9XWLl5StnGKtNR7gGGWA5JPYEiOVferw7T3cAuleop57nYJU3TA+mx0Kbih
-            Mz2GWqmy1gaVTfoCZh1E
-            =+szT
+            hQGMA6eqXQ0/huC+AQv/a/d7ENA1IwJKk6qUmcSN4lQ1grxgwROT4mjHjhwUkK9y
+            /wyU0HRenA/Jh+4wR1qcZ4QWvd2XAjEbMe3w1fTVb3QjHRfSkirUlVwYhsk7aaGD
+            be4D4FWtTTnOA+Pk3iyPtbI4qRazvrG0kdU2pQj/+gMyEZs1Qj3j5wA62RBdtDjb
+            tSxy1WhtQZnj+LxMACtNHI9HefOyEBO+FQpbRlwVoE/jg+atsQFit88zEZRJmNKO
+            CSgvdABe09s7WQNUXcT4RYryEcB/Y5QjAedhT7i2Wqy+E2nRMKxBB3Jb6GBj9lMx
+            O3PB5ztohmpfEViL7JR/XUVSi75STOt/zrWePsC2xE3RRgJ8oplTXA+8TSkS3VnN
+            n1kSdcydOhBRF/pG/oCS0P7czbbSX6IV32KDgSfGtu/gqIDX2SqZzQCrTtwhA0eS
+            OdXQgrqigLRMSwlSWuP2QJ6GV48wVzm7J4J2zWoDvAV8i3kjq/KSSESPAB5i0jOn
+            F+IHFtfkjsmnZKJoSiZy0lwBNsDyPu14lSF6fxNjI37VWfeo+CpaBHjv7bVIFv7T
+            VzOhknYSn1jeC+qvcv1tZ1BGFTIEgDzkXVE6JI89/4RxQ1U2scyAZ7GWgFL/x66d
+            WMVknt8lAqhHXbvLjQ==
+            =sUtD
             -----END PGP MESSAGE-----
           fp: 17D956D69F581977E848FC9FA228985D4ABDC074
     encrypted_regex: (?i)id|secret|domain|dsn
