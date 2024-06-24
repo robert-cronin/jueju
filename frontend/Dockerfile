@@ -3,9 +3,9 @@ FROM node:22-alpine3.19 as build
 WORKDIR /app
 
 COPY package.json ./
-COPY package-lock.json ./
+COPY yarn.lock ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
@@ -17,9 +17,9 @@ FROM node:22-alpine3.19 as dev
 WORKDIR /app
 
 COPY package.json ./
-COPY package-lock.json ./
+COPY yarn.lock ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
