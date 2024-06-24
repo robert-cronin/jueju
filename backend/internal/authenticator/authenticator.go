@@ -19,14 +19,17 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"net/url"
+	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/robert-cronin/jueju/backend/internal/database"
+	"github.com/robert-cronin/jueju/backend/internal/models"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
+	"gorm.io/gorm"
 )
 
 // Authenticator is used to authenticate our users.
@@ -137,6 +140,45 @@ func (a *Authenticator) deleteSession(c *fiber.Ctx) error {
 	return nil
 }
 
+func (a *Authenticator) GetOrCreateUser(profile map[string]interface{}) (*models.User, error) {
+	var user models.User
+
+	auth0ID, ok := profile["sub"].(string)
+	if !ok {
+		return nil, errors.New("invalid Auth0 ID")
+	}
+
+	// Try to find the user by Auth0 ID
+	result := database.DB.Where("auth0_id = ?", auth0ID).First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			// User doesn't exist, create a new one
+			user = models.User{
+				Auth0ID:       auth0ID,
+				Email:         profile["email"].(string),
+				EmailVerified: profile["email_verified"].(bool),
+				Name:          profile["name"].(string),
+				Nickname:      profile["nickname"].(string),
+				Picture:       profile["picture"].(string),
+				LastLogin:     time.Now(),
+			}
+			if err := database.DB.Create(&user).Error; err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, result.Error
+		}
+	} else {
+		// User exists, update last login
+		user.LastLogin = time.Now()
+		if err := database.DB.Save(&user).Error; err != nil {
+			return nil, err
+		}
+	}
+
+	return &user, nil
+}
+
 // Callback handles the callback from Auth0
 func (a *Authenticator) Callback(c *fiber.Ctx) error {
 	session, err := a.store.Get(c)
@@ -144,34 +186,51 @@ func (a *Authenticator) Callback(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
 
-	fmt.Println("state:", session.Get("state"), "query:", c.Query("state"))
+	if session == nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Session is nil"})
+	}
 
-	if c.Query("state") != session.Get("state") {
+	stateFromSession := session.Get("state")
+	if stateFromSession == nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "State not found in session"})
+	}
+
+	if c.Query("state") != stateFromSession.(string) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid state parameter"})
 	}
 
 	token, err := a.Exchange(c.Context(), c.Query("code"))
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Failed to exchange token"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Failed to exchange token: " + err.Error()})
 	}
 
 	idToken, err := a.verifyIDToken(c.Context(), token)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to verify ID token"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to verify ID token: " + err.Error()})
 	}
 
 	var profile map[string]interface{}
 	if err := idToken.Claims(&profile); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get user info"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get user info: " + err.Error()})
 	}
 
+	user, err := a.GetOrCreateUser(profile)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create or update user: " + err.Error()})
+	}
+
+	if user == nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "User is nil after GetOrCreateUser"})
+	}
+
+	session.Set("user_id", user.ID.String())
+	session.Set("auth0_id", user.Auth0ID)
 	session.Set("access_token", token.AccessToken)
-	session.Set("profile", profile)
+
 	if err := session.Save(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save session"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save session: " + err.Error()})
 	}
 
-	// Get the redirect url
 	redirectURL := viper.GetString("auth0.redirect_url")
 	if redirectURL == "" {
 		redirectURL = "/"
@@ -203,19 +262,24 @@ func (a *Authenticator) Logout(c *fiber.Ctx) error {
 	return c.Redirect(logoutURL.String(), fiber.StatusTemporaryRedirect)
 }
 
-// GetUser returns the user profile
+// GetUser returns the user data
 func (a *Authenticator) GetUser(c *fiber.Ctx) error {
 	session, err := a.store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
 
-	profile := session.Get("profile")
-	if profile == nil {
+	userID := session.Get("user_id")
+	if userID == nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "User not authenticated"})
 	}
 
-	return c.JSON(profile)
+	var user models.User
+	if err := database.DB.First(&user, "id = ?", userID).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch user"})
+	}
+
+	return c.JSON(user)
 }
 
 func generateRandomState() (string, error) {

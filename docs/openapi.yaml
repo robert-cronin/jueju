@@ -78,25 +78,46 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
-    # this comes from auth0
     User:
       required:
         - id
-        - name
+        - auth0_id
+        - email
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
           description: User ID
+        auth0_id:
+          type: string
+          description: Auth0 ID
+        email:
+          type: string
+          description: User email
+        email_verified:
+          type: boolean
+          description: Email verification status
         name:
           type: string
           description: User name
         nickname:
           type: string
           description: User nickname
-        avatar:
+        picture:
           type: string
           description: User avatar
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        last_login:
+          type: string
+          format: date-time
+          description: Last login timestamp
     Error:
       required:
         - code

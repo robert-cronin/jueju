@@ -11,9 +11,11 @@ import (
 	"net/url"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 // Error defines model for Error.
@@ -27,17 +29,35 @@ type Error struct {
 
 // User defines model for User.
 type User struct {
-	// Avatar User avatar
-	Avatar *string `json:"avatar,omitempty"`
+	// Auth0Id Auth0 ID
+	Auth0Id string `json:"auth0_id"`
+
+	// CreatedAt Account creation timestamp
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// Email User email
+	Email string `json:"email"`
+
+	// EmailVerified Email verification status
+	EmailVerified *bool `json:"email_verified,omitempty"`
 
 	// Id User ID
-	Id int64 `json:"id"`
+	Id openapi_types.UUID `json:"id"`
+
+	// LastLogin Last login timestamp
+	LastLogin *time.Time `json:"last_login,omitempty"`
 
 	// Name User name
-	Name string `json:"name"`
+	Name *string `json:"name,omitempty"`
 
 	// Nickname User nickname
 	Nickname *string `json:"nickname,omitempty"`
+
+	// Picture User avatar
+	Picture *string `json:"picture,omitempty"`
+
+	// UpdatedAt Last update timestamp
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 // ServerInterface represents all server handlers.
@@ -121,16 +141,18 @@ func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, option
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8xUTU/cPBD+K9a87zGNw1JVyDdEEVq0qpBaToiD68wmLo7t2uNFCOW/V3Y2lC679NLD",
-	"nmLnmY/n8Xw8g3KDdxYtRRDPEFWPgyzHyxBcyAcfnMdAGstv5VrM3xajCtqTdhbEZMwKVsHahUESCNCW",
-	"ThdQAT15nK7YYYCxggFjlN3BQDP84hopaNvBOFYQ8GfSAVsQd7BNOJvfjxXcRtzDWm4kyfA2XbZmW/BN",
-	"sgp0e8Bl+XlH56ePe3VaOeCBEAXak9Nq9fCe2wz/7W10C9v892PGtF27tzG/9ToyHRn1yK4TXid2frOE",
-	"CoxWaGMhMZGBcy9Vj2xRN1BBCgYE9EQ+Cs4fHx9rWeDahY5vfSNfLS8uv3y9/LCom7qnwWR5pMnkcK+T",
-	"bTDEic5J3dRNNnMerfQaBJyWXxV4SX2pJVfSmO9SPeRLh5Q/udYyS1q2IOBiNsgvEr3LZCbpa5kMTW1s",
-	"CW05Su+NVsWb/4iZxjwH+fR/wDUI+I//HhS+nRI+jUh53X1dPOcupYlpGGR4esWOrYMb2HmivikW3LhO",
-	"24OiVgU9SkUr10WWcndqS670UnyKhAPbaLmj0CV6T2KGj1ejS8RUCgEtMeO6Dlum7aQ8Yiw9XHSm7RLa",
-	"q/IKqSypHZmLpvlnEkv8PQpvpxpNi6uwrY7kea+Q5g56xa7YYMj7AcTd7u5aOSUNm/A/dpLg3GSsd5HE",
-	"WXPWcOk135zAWO3GuAmuTSpfdgO9+NyPvwIAAP//YERhaiYHAAA=",
+	"H4sIAAAAAAAC/8xVXU/DNhT9K9bdHkMTygvKG2IVKqompI0nhCrj3CYeie3Z10UI9b9Pvm5LaVOkTXvg",
+	"qW7O/Ton1ycfoOzgrEFDAeoPCKrDQfJx5r316eC8dehJIz9WtsH022BQXjvS1kCdgwVjBaysHyRBDdrQ",
+	"1RQKoHeH+S+26GFTwIAhyPZsoR28Tw3ktWlhsynA499Re2ygfoJtw13486aAx4AjU8tIXbXUzWnDm4SI",
+	"+W+nvQpQHiVhs0xkTvKUstGQ4BhtjSA9YCA5uEMFGkl4kZCx8jhI3Z9WTgxExs4lLdfo9UrjCJ9ZwkXG",
+	"VZ4skKQYPou9WNujNKnamCLcnwXZ04hRN2PD9DLQsretNqdlFjKQYOw/SGPkgGcmY2gsRavX79J28Eiq",
+	"04qiP5cp15KkH8uLrjm7H0w/B/xr/kdbztrvN3i3N8+bFKfNyp42/7PTQeggqENxH/E+ipuHORTQa4Um",
+	"MNEsFdw4qToU00kFBUTfQw0dkQt1Wb69vU0kwxPr23KbG8rF/Hb2+x+zi+mkmnQ09EkJ0tSncofN1uhD",
+	"HudyUk2qFGYdGuk01HDFjwpwkjq+oaWSff8i1Wv60yIrmm4wr/C8gRpudwFJneBsGiZTX8nYUzYnQ2j4",
+	"KJ3rtxeg/CtY8+lu6fSrxxXU8Ev5aX/l1vvKbHys7pg37XrzawpxGKR/P5hOrLwdBLsKR5T76zFKasHo",
+	"j2S0sG0QMd0AbcjyLoX3QDiItZZHDG2k7ygm+OdytJGEit6jYcNqsRHaZOYBA+8w84zbT8soyzsk/vQc",
+	"0ZxW1f9GkeuPMHzM7yg7C09b/BB575B2G3QwHcegT/4A9dOJcVole5HxL55Ul2WfsM4Gqq+r66qUTpfr",
+	"S9gUxzUevG2iyh+/r4X2Oc+bfwIAAP//OzfmVPwIAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

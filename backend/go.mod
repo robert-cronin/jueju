@@ -8,6 +8,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/google/uuid v1.5.0
 	github.com/oapi-codegen/oapi-codegen/v2 v2.3.0
+	github.com/oapi-codegen/runtime v1.1.1
 	github.com/redis/go-redis/v9 v9.5.3
 	github.com/spf13/viper v1.19.0
 	golang.org/x/oauth2 v0.21.0

@@ -43,11 +43,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const { api } = useAPI();
 
-  const goToLogin = async () => {
+  const goToLogin = () => {
+    setLoading(true);
     window.location.href = import.meta.env.VITE_API_BASE_PATH + "/login";
   };
 
   const goToLogout = () => {
+    setLoading(true);
     window.location.href = import.meta.env.VITE_API_BASE_PATH + "/logout";
   };
 

@@ -21,7 +21,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 // InitDB initialises a new database connection.
 func InitDB() {
@@ -33,20 +33,20 @@ func InitDB() {
 
 	// Connect to the database
 	var err error
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
 	// Migrate the database
-	err = db.AutoMigrate(&models.User{}, &models.Poem{})
+	err = DB.AutoMigrate(&models.User{}, &models.Poem{})
 	if err != nil {
 		panic(err)
 	}
 
 	// Seed the database
 	if viper.GetString("env") != "production" {
-		err = seedUsers(db)
+		err = seedUsers(DB)
 		if err != nil {
 			panic(err)
 		}

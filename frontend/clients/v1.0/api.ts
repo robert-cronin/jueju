@@ -50,16 +50,34 @@ export interface ModelError {
 export interface User {
     /**
      * User ID
-     * @type {number}
+     * @type {string}
      * @memberof User
      */
-    'id': number;
+    'id': string;
+    /**
+     * Auth0 ID
+     * @type {string}
+     * @memberof User
+     */
+    'auth0_id': string;
+    /**
+     * User email
+     * @type {string}
+     * @memberof User
+     */
+    'email': string;
+    /**
+     * Email verification status
+     * @type {boolean}
+     * @memberof User
+     */
+    'email_verified'?: boolean;
     /**
      * User name
      * @type {string}
      * @memberof User
      */
-    'name': string;
+    'name'?: string;
     /**
      * User nickname
      * @type {string}
@@ -71,7 +89,25 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    'avatar'?: string;
+    'picture'?: string;
+    /**
+     * Account creation timestamp
+     * @type {string}
+     * @memberof User
+     */
+    'created_at'?: string;
+    /**
+     * Last update timestamp
+     * @type {string}
+     * @memberof User
+     */
+    'updated_at'?: string;
+    /**
+     * Last login timestamp
+     * @type {string}
+     * @memberof User
+     */
+    'last_login'?: string;
 }
 
 /**

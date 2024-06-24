@@ -14,12 +14,28 @@
 
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type User struct {
-	ID       uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
-	UID      string    `gorm:"uniqueIndex;not null"`
-	Username string    `gorm:"uniqueIndex;not null"`
-	Email    string    `gorm:"uniqueIndex;not null"`
-	Poems    []Poem    `gorm:"foreignKey:UserID"`
+	ID            uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	Auth0ID       string    `gorm:"uniqueIndex;not null" json:"auth0_id"`
+	Email         string    `gorm:"uniqueIndex;not null" json:"email"`
+	EmailVerified bool      `json:"email_verified"`
+	Name          string    `json:"name"`
+	Nickname      string    `json:"nickname"`
+	Picture       string    `json:"picture"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	LastLogin     time.Time `json:"last_login"`
+}
+
+// BeforeCreate will set a UUID rather than numeric ID.
+func (u *User) BeforeCreate(tx *gorm.DB) error {
+	u.ID = uuid.New()
+	return nil
 }
