@@ -38,10 +38,23 @@ func seedUsers(db *gorm.DB) error {
 	}
 
 	for _, user := range users {
-		if err := db.Create(&user).Error; err != nil {
-			return fmt.Errorf("error creating user: %w", err)
+		// Check if user already exists
+		var existingUser models.User
+		result := db.Where("email = ?", user.Email).First(&existingUser)
+		if result.Error == gorm.ErrRecordNotFound {
+			// User doesn't exist, create new user
+			if err := db.Create(&user).Error; err != nil {
+				return fmt.Errorf("error creating user: %w", err)
+			}
+		} else if result.Error != nil {
+			// Some other error occurred
+			return fmt.Errorf("error checking for existing user: %w", result.Error)
+		} else {
+			// User already exists, skip creation
+			fmt.Printf("User with email %s already exists, skipping creation\n", user.Email)
+			continue
 		}
-		
+
 		err := seedPoems(db, user)
 		if err != nil {
 			return err

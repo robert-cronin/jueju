@@ -15,6 +15,7 @@
 package app
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"os"
@@ -24,6 +25,7 @@ import (
 	"github.com/robert-cronin/jueju/backend/internal/api"
 	"github.com/robert-cronin/jueju/backend/internal/config"
 	"github.com/robert-cronin/jueju/backend/internal/database"
+	"github.com/robert-cronin/jueju/backend/internal/redis"
 	"github.com/robert-cronin/jueju/backend/internal/server"
 	"github.com/spf13/viper"
 )
@@ -33,7 +35,14 @@ func middleware(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+// Register gobs
+func initGob() {
+	gob.Register(map[string]interface{}{})
+}
+
 func Bootstrap() {
+	initGob()
+
 	// Get the environment variable
 	env := os.Getenv("ENV")
 	if env == "" {
@@ -47,12 +56,32 @@ func Bootstrap() {
 	// Connect to the database
 	database.InitDB()
 
+	// Initialize the Redis client
+	redis.Init()
+
 	// Create the server
-	srv := server.NewServer()
+	srv, err := server.NewServer()
+	if err != nil {
+		log.Fatalf("Failed to create server: %v", err)
+	}
 
 	// Create the Fiber app
 	app := fiber.New()
-	app.Use(cors.New())
+
+	// Set CORS middleware
+	if env == "development" {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins:     "http://localhost:5173",
+			AllowCredentials: true,
+			AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+			AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
+		}))
+	} else {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: "https://jueju.robertcronin.com",
+			AllowHeaders: "Origin, Content-Type, Accept",
+		}))
+	}
 
 	// Register the API handlers
 	apiGroup := app.Group("/api", middleware)

@@ -19,55 +19,64 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/robert-cronin/jueju/backend/internal/api"
 	"github.com/robert-cronin/jueju/backend/internal/authenticator"
+	"github.com/robert-cronin/jueju/backend/internal/redis"
 )
 
 // ensure that we've conformed to the `ServerInterface` with a compile-time check
 var _ api.ServerInterface = (*Server)(nil)
 
 type Server struct {
-	auth *authenticator.Authenticator
+	auth  *authenticator.Authenticator
 	store *session.Store
 }
 
 // Callback implements api.ServerInterface.
 func (s *Server) Callback(c *fiber.Ctx) error {
-	handler := s.auth.Callback(c)
-	return handler(c)
+	return s.auth.Callback(c)
 }
 
 // Logout implements api.ServerInterface.
 func (s *Server) Logout(c *fiber.Ctx) error {
-	handler := s.auth.Logout(c)
-	return handler(c)
+	return s.auth.Logout(c)
 }
 
 // GetUser implements ServerInterface.
-func (s Server) GetUser(c *fiber.Ctx) error {
-	// TODO: implement GetUser
-	// for now we'll just return a mock response
-	return c.JSON(map[string]string{
-		"message": "Hello, World!",
-	})
+func (s *Server) GetUser(c *fiber.Ctx) error {
+	return s.auth.GetUser(c)
 }
 
 // Login implements ServerInterface.
-func (s Server) Login(c *fiber.Ctx) error {
-	handler := s.auth.Login(c)
-	return handler(c)
+func (s *Server) Login(c *fiber.Ctx) error {
+	return s.auth.Login(c)
 }
 
-func NewServer() *Server {
-	auth, err := authenticator.NewAuthenticator()
+// AuthMiddleware checks if the user is authenticated
+func (s *Server) AuthMiddleware() fiber.Handler {
+	return s.auth.AuthRequired
+}
+
+// NewServer creates a new server
+func NewServer() (*Server, error) {
+	// Create a new session store
+	fiberStorage := redis.NewFiberClient("fiber_session_")
+	store := session.New(
+		session.Config{
+			Storage:        fiberStorage,
+			Expiration:     24 * 60 * 60 * 1000, // 24 hours
+			CookieSameSite: "Lax",
+			CookieSecure:   false,
+		},
+	)
+
+	auth, err := authenticator.NewAuthenticator(store)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	store := session.New()
-
 	srv := &Server{
-		auth: auth,
+		auth:  auth,
 		store: store,
 	}
 
-	return srv
+	return srv, nil
 }
