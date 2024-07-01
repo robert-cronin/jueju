@@ -39,12 +39,12 @@ func InitDB() {
 	}
 
 	// Migrate the database
-	err = DB.AutoMigrate(&models.User{}, &models.Poem{})
+	err = DB.AutoMigrate(&models.User{}, &models.Poem{}, &models.PoemRequest{})
 	if err != nil {
 		panic(err)
 	}
 
-	// Seed the database
+	// Seed the database in development environment
 	if viper.GetString("env") != "production" {
 		err = seedUsers(DB)
 		if err != nil {

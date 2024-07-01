@@ -19,6 +19,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/robert-cronin/jueju/backend/internal/api"
 	"github.com/robert-cronin/jueju/backend/internal/authenticator"
+	"github.com/robert-cronin/jueju/backend/internal/handlers"
 	"github.com/robert-cronin/jueju/backend/internal/redis"
 )
 
@@ -26,33 +27,38 @@ import (
 var _ api.ServerInterface = (*Server)(nil)
 
 type Server struct {
-	auth  *authenticator.Authenticator
-	store *session.Store
+	Auth  *authenticator.Authenticator
+	Store *session.Store
+}
+
+// GetUserPoemRequests implements api.ServerInterface.
+func (s *Server) GetUserPoemRequests(c *fiber.Ctx) error {
+	return handlers.GetUserPoemRequests(c)
+}
+
+// RequestPoem implements api.ServerInterface.
+func (s *Server) RequestPoem(c *fiber.Ctx) error {
+	return handlers.RequestPoem(c)
 }
 
 // Callback implements api.ServerInterface.
 func (s *Server) Callback(c *fiber.Ctx) error {
-	return s.auth.Callback(c)
+	return s.Auth.Callback(c)
 }
 
 // Logout implements api.ServerInterface.
 func (s *Server) Logout(c *fiber.Ctx) error {
-	return s.auth.Logout(c)
+	return s.Auth.Logout(c)
 }
 
 // GetUser implements ServerInterface.
 func (s *Server) GetUser(c *fiber.Ctx) error {
-	return s.auth.GetUser(c)
+	return s.Auth.GetUser(c)
 }
 
 // Login implements ServerInterface.
 func (s *Server) Login(c *fiber.Ctx) error {
-	return s.auth.Login(c)
-}
-
-// AuthMiddleware checks if the user is authenticated
-func (s *Server) AuthMiddleware() fiber.Handler {
-	return s.auth.AuthRequired
+	return s.Auth.Login(c)
 }
 
 // NewServer creates a new server
@@ -74,8 +80,8 @@ func NewServer() (*Server, error) {
 	}
 
 	srv := &Server{
-		auth:  auth,
-		store: store,
+		Auth:  auth,
+		Store: store,
 	}
 
 	return srv, nil

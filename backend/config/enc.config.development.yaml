@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 auth0:
-    callback_url: http://localhost:3000/api/callback
+    callback_url: http://localhost:3000/api/v1/auth/callback
     redirect_url: http://localhost:5173
 db:
-    dsn: ENC[AES256_GCM,data:LCTOlVvBd18T31lvuig4RXnWwWc7yQt7QZwWOfEaTcqd76yf9PCSwu0Y6lUJq0HjS6eVl3Day8PcLyo2,iv:ASSDIlS2Au8TEs8Tuye8J7Q91VEyrCdc88kNUP78ud8=,tag:W+ADHyol5k/t03BMYIwRjg==,type:str]
+    dsn: ENC[AES256_GCM,data:CeO3zwgIuQqEKpNsJxE2c32e9IP0k3oJopW75dqUcuRJ3dCE/uMkdExZYJXzkA/twi4590WT2LkiCVff,iv:WtF7uoBKAemvuQM+uEqwkbhu7AsOLOnClf6xbypAR+s=,tag:Dw2qBWVuixWU8ZfnAlMTkQ==,type:str]
 redis:
     host: localhost
     port: 6379
@@ -28,25 +28,25 @@ sops:
     azure_kv: []
     hc_vault: []
     age: []
-    lastmodified: "2024-06-24T08:43:44Z"
-    mac: ENC[AES256_GCM,data:6bfgert0/cfOwUR0COAjv9fncsgGH1Yb4eN0ioD+us4Qk/HaqrjZqGNZQZWhec3GvqeYAKMSUwP5h23Z/+LFhBm3/FHfUV8jgSIEuRO1GY5Vo+tUZ2fh+I0hCUjKsTFen2YfHIHT5ma0L8/xf3rPjPriMD1YWn5gPPC67ZqUYYo=,iv:eeSJZSwYVH62EaqmxkNehW2a2DT8EYdynYJ2mjWHj2Q=,tag:oeQ2VkCHtWqY6B+fBw7XPQ==,type:str]
+    lastmodified: "2024-07-01T09:35:52Z"
+    mac: ENC[AES256_GCM,data:DyR+3YYOF5yEo/dFZLLkzPpSpiawcM1F7EKzuVY9EVavFj5KtLAFeNevK/6lXzexBxca0UcSsjz4Y+ET4gpOGLKZF2NOlpUKzBYLPu834GfA3WjSQlXuOX6On5x+XlAvuFZKsLtQ7hW4vwSp7LYRhmjQlzQl9uT/UBzgkw5zhqU=,iv:w4tKDs1j2RBHu2jyhkc0ebTpuCdyZF6/RsxTLR/YO4M=,tag:YJZjyuD6YjMeei8uDo1nCQ==,type:str]
     pgp:
-        - created_at: "2024-06-24T08:43:44Z"
+        - created_at: "2024-07-01T09:35:52Z"
           enc: |-
             -----BEGIN PGP MESSAGE-----
 
-            hQGMA6eqXQ0/huC+AQv/ekPObPIUs5TXdu7Qsvn8++I6KYhnP1bMAtJvvUNWPV+/
-            vSGoKU9KrRntpcVOhknydj0vwY3tauLSr4qh8H6ef0FcjEDsch2De+b45OCurEjj
-            4V+MtcEi7JJdU5PTxifF8kpwanSQbCo5xCy8O7bveCTW9yo/W+i1VgvcCVlIdiV/
-            AUmgsUP6qiq4G8vvi5Bx6gZ/AebUJX03w6sva4Fdn9f+WY9tmh695+eAne7sEXsv
-            mFaqahr9lgbXA1u5GSF0R42vPXCtOpqVlZQhuQJAO3FySQzPaXWsV6bQsEiFLoCq
-            AQRgCcA59ZnCsdNoaQiimUgAYbYOViF0WxQ19AMwiT8lWWUKWeEL76oHcE/UNVY/
-            NwMhrY1VOskC1dzOF6Corh4DrPQE8RnPs2I1yklpTHE6LfZpRqnGqOo3JiaPrD2Q
-            NxIzIhOL0TnXRLIg8VIidbxprTi7nSR3QiXHgRzEirERh0TDMOus232wU85pLn5u
-            lzAL/D4spBHP/Liy6McO0l4BGaBEx9Kg9QG2/xjhRxvwanfm9arS+yqGqt0BKK+b
-            9Pkox+if906ZqV7aM9zmT4LtOFrfu7HM5/2iVoeOlKC9qN8Ul6bvDifzoG2+r3WF
-            9EuWix2dHg9R67Xk67du
-            =IhVd
+            hQGMA6eqXQ0/huC+AQv/duitDQ1gedlOtOO/uXVAsOWQkrBJKqHU+aLyzeq7jxyr
+            ZKxPrH24V6M+RcbaHO5fnW3vzWKnh53rT6L7fyNnCC9N9docvqPAxs3unjjRR6D1
+            DSIZ3p3E5FEFn5TgT7GcWtkUW8PQeeJp8Pb+Dww8u9rBXnmddux/1acz9BwkS7Eq
+            PeCrXWMjTLtjyAKVAi86nXsPjAQu4JjkzJysTeBKoE7WOVn45t/XSYs9xjjB1K7J
+            hbdAYIk2ke5oKFHURFptuqrwRn8ovaSdKvWAOX6O1o0JvU8+Gx+S1x+tIYTYLa7S
+            QdBCC+OPhy+O3bK1XgP/k6pxKWo4LVXcVpTuoOWs7wXC9ux6Vnttu3VGoWfyX55V
+            CYoImyDYfDUL8DESDKh694yvEOW/d6n0qbR4gV8NjgtfMGtgI3I42E5CjXtYEXbH
+            2SztBm3YOn0B+VUQF8As2MaLVHOj5up7RAK1vFRFQ+DxWZHd31nxt0jdUHuoJdhe
+            t1koVyCwNDv2C+vl+U8f0l4Bj0ffwd05xIoPtdk2R8xtQVpRCFlmn7k6Aq5cy3tQ
+            CBYeC+l70r5XJAofaA9mdcO8JhvHFK1YLT0DAhsAqZLRUGzPizo294MMZoENaGkT
+            PViOSX1zJexoC3WyLKtf
+            =pWcG
             -----END PGP MESSAGE-----
           fp: 17D956D69F581977E848FC9FA228985D4ABDC074
     encrypted_regex: (?i)id|secret|domain|dsn

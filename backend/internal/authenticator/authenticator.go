@@ -25,6 +25,7 @@ import (
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/google/uuid"
 	"github.com/robert-cronin/jueju/backend/internal/database"
 	"github.com/robert-cronin/jueju/backend/internal/models"
 	"github.com/spf13/viper"
@@ -36,7 +37,8 @@ import (
 type Authenticator struct {
 	*oidc.Provider
 	oauth2.Config
-	store *session.Store
+
+	Store *session.Store
 }
 
 // VerifyIDToken verifies that an *oauth2.Token is a valid *oidc.IDToken.
@@ -89,13 +91,13 @@ func NewAuthenticator(store *session.Store) (*Authenticator, error) {
 	return &Authenticator{
 		Provider: provider,
 		Config:   conf,
-		store:    store,
+		Store:    store,
 	}, nil
 }
 
 // AuthRequired is a middleware that checks if the user is authenticated
 func (a *Authenticator) AuthRequired(c *fiber.Ctx) error {
-	session, err := a.store.Get(c)
+	session, err := a.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
@@ -114,7 +116,7 @@ func (a *Authenticator) Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to generate state"})
 	}
 
-	session, err := a.store.Get(c)
+	session, err := a.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
@@ -128,7 +130,7 @@ func (a *Authenticator) Login(c *fiber.Ctx) error {
 }
 
 func (a *Authenticator) deleteSession(c *fiber.Ctx) error {
-	session, err := a.store.Get(c)
+	session, err := a.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
@@ -181,7 +183,7 @@ func (a *Authenticator) GetOrCreateUser(profile map[string]interface{}) (*models
 
 // Callback handles the callback from Auth0
 func (a *Authenticator) Callback(c *fiber.Ctx) error {
-	session, err := a.store.Get(c)
+	session, err := a.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
@@ -264,7 +266,7 @@ func (a *Authenticator) Logout(c *fiber.Ctx) error {
 
 // GetUser returns the user data
 func (a *Authenticator) GetUser(c *fiber.Ctx) error {
-	session, err := a.store.Get(c)
+	session, err := a.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
 	}
@@ -289,4 +291,30 @@ func generateRandomState() (string, error) {
 		return "", err
 	}
 	return base64.URLEncoding.EncodeToString(b), nil
+}
+
+// AuthMiddleware is a middleware that checks if the user is authenticated and sets the user ID in the context
+func (a *Authenticator) AuthMiddleware() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		session, err := a.Store.Get(c)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get session"})
+		}
+
+		userID := session.Get("user_id")
+		if userID == nil {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "User not authenticated"})
+		}
+
+		// Parse the user ID from string to uuid.UUID
+		parsedUserID, err := uuid.Parse(userID.(string))
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Invalid user ID format"})
+		}
+
+		// Set the user ID in the context
+		c.Locals("userID", parsedUserID)
+
+		return c.Next()
+	}
 }

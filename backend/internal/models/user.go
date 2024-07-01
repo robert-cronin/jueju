@@ -22,20 +22,23 @@ import (
 )
 
 type User struct {
-	ID            uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
-	Auth0ID       string    `gorm:"uniqueIndex;not null" json:"auth0_id"`
-	Email         string    `gorm:"uniqueIndex;not null" json:"email"`
-	EmailVerified bool      `json:"email_verified"`
-	Name          string    `json:"name"`
-	Nickname      string    `json:"nickname"`
-	Picture       string    `json:"picture"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
-	LastLogin     time.Time `json:"last_login"`
+	ID              uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	Auth0ID         string    `gorm:"uniqueIndex;not null" json:"auth0_id"`
+	Email           string    `gorm:"uniqueIndex;not null" json:"email"`
+	EmailVerified   bool      `json:"email_verified"`
+	Name            string    `json:"name"`
+	Nickname        string    `json:"nickname"`
+	Picture         string    `json:"picture"`
+	CreatedAt       time.Time `json:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at"`
+	LastLogin       time.Time `json:"last_login"`
+	PoemCredits     int       `gorm:"default:10" json:"poem_credits"`
+	LastCreditReset time.Time `json:"last_credit_reset"`
 }
 
 // BeforeCreate will set a UUID rather than numeric ID.
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	u.ID = uuid.New()
+	u.LastCreditReset = time.Now()
 	return nil
 }

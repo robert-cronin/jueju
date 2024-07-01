@@ -45,6 +45,77 @@ export interface ModelError {
 /**
  * 
  * @export
+ * @interface PoemRequest
+ */
+export interface PoemRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'user_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'prompt': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'poem'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'status': PoemRequestStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'created_at': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequest
+     */
+    'updated_at': string;
+}
+
+export const PoemRequestStatusEnum = {
+    Pending: 'pending',
+    Completed: 'completed',
+    Failed: 'failed'
+} as const;
+
+export type PoemRequestStatusEnum = typeof PoemRequestStatusEnum[keyof typeof PoemRequestStatusEnum];
+
+/**
+ * 
+ * @export
+ * @interface PoemRequestInput
+ */
+export interface PoemRequestInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof PoemRequestInput
+     */
+    'prompt': string;
+}
+/**
+ * 
+ * @export
  * @interface User
  */
 export interface User {
@@ -123,7 +194,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         callback: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/callback`;
+            const localVarPath = `/auth/callback`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -165,6 +236,40 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication cookieAuth required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get user\'s poem requests
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserPoemRequests: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/poems`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication cookieAuth required
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -183,7 +288,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         login: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/login`;
+            const localVarPath = `/auth/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -225,11 +330,51 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication cookieAuth required
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Request a new poem
+         * @param {PoemRequestInput} poemRequestInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestPoem: async (poemRequestInput: PoemRequestInput, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'poemRequestInput' is not null or undefined
+            assertParamExists('requestPoem', 'poemRequestInput', poemRequestInput)
+            const localVarPath = `/poems`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication cookieAuth required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(poemRequestInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -272,6 +417,18 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get user\'s poem requests
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUserPoemRequests(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PoemRequest>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserPoemRequests(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getUserPoemRequests']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Logs user into the system via Auth0
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -292,6 +449,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.logout(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.logout']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Request a new poem
+         * @param {PoemRequestInput} poemRequestInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async requestPoem(poemRequestInput: PoemRequestInput, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PoemRequest>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.requestPoem(poemRequestInput, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.requestPoem']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -324,6 +494,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Get user\'s poem requests
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserPoemRequests(options?: any): AxiosPromise<Array<PoemRequest>> {
+            return localVarFp.getUserPoemRequests(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Logs user into the system via Auth0
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -339,6 +518,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         logout(options?: any): AxiosPromise<Error> {
             return localVarFp.logout(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Request a new poem
+         * @param {PoemRequestInput} poemRequestInput 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestPoem(poemRequestInput: PoemRequestInput, options?: any): AxiosPromise<PoemRequest> {
+            return localVarFp.requestPoem(poemRequestInput, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -374,6 +563,17 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get user\'s poem requests
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getUserPoemRequests(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getUserPoemRequests(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Logs user into the system via Auth0
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -392,6 +592,18 @@ export class DefaultApi extends BaseAPI {
      */
     public logout(options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).logout(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Request a new poem
+     * @param {PoemRequestInput} poemRequestInput 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public requestPoem(poemRequestInput: PoemRequestInput, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).requestPoem(poemRequestInput, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

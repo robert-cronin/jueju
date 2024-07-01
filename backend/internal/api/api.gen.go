@@ -18,6 +18,17 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+const (
+	CookieAuthScopes = "cookieAuth.Scopes"
+)
+
+// Defines values for PoemRequestStatus.
+const (
+	Completed PoemRequestStatus = "completed"
+	Failed    PoemRequestStatus = "failed"
+	Pending   PoemRequestStatus = "pending"
+)
+
 // Error defines model for Error.
 type Error struct {
 	// Code Error code
@@ -25,6 +36,25 @@ type Error struct {
 
 	// Message Error message
 	Message string `json:"message"`
+}
+
+// PoemRequest defines model for PoemRequest.
+type PoemRequest struct {
+	CreatedAt time.Time          `json:"created_at"`
+	Id        openapi_types.UUID `json:"id"`
+	Poem      *string            `json:"poem,omitempty"`
+	Prompt    string             `json:"prompt"`
+	Status    PoemRequestStatus  `json:"status"`
+	UpdatedAt time.Time          `json:"updated_at"`
+	UserId    openapi_types.UUID `json:"user_id"`
+}
+
+// PoemRequestStatus defines model for PoemRequest.Status.
+type PoemRequestStatus string
+
+// PoemRequestInput defines model for PoemRequestInput.
+type PoemRequestInput struct {
+	Prompt string `json:"prompt"`
 }
 
 // User defines model for User.
@@ -60,17 +90,29 @@ type User struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
+// ErrorResponse defines model for ErrorResponse.
+type ErrorResponse = Error
+
+// RequestPoemJSONRequestBody defines body for RequestPoem for application/json ContentType.
+type RequestPoemJSONRequestBody = PoemRequestInput
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Callback from Auth0
-	// (GET /callback)
+	// (GET /auth/callback)
 	Callback(c *fiber.Ctx) error
 	// Logs user into the system via Auth0
-	// (GET /login)
+	// (GET /auth/login)
 	Login(c *fiber.Ctx) error
 	// Logs out current logged in user session
 	// (GET /logout)
 	Logout(c *fiber.Ctx) error
+	// Get user's poem requests
+	// (GET /poems)
+	GetUserPoemRequests(c *fiber.Ctx) error
+	// Request a new poem
+	// (POST /poems)
+	RequestPoem(c *fiber.Ctx) error
 	// Get user information
 	// (GET /user)
 	GetUser(c *fiber.Ctx) error
@@ -98,11 +140,31 @@ func (siw *ServerInterfaceWrapper) Login(c *fiber.Ctx) error {
 // Logout operation middleware
 func (siw *ServerInterfaceWrapper) Logout(c *fiber.Ctx) error {
 
+	c.Context().SetUserValue(CookieAuthScopes, []string{})
+
 	return siw.Handler.Logout(c)
+}
+
+// GetUserPoemRequests operation middleware
+func (siw *ServerInterfaceWrapper) GetUserPoemRequests(c *fiber.Ctx) error {
+
+	c.Context().SetUserValue(CookieAuthScopes, []string{})
+
+	return siw.Handler.GetUserPoemRequests(c)
+}
+
+// RequestPoem operation middleware
+func (siw *ServerInterfaceWrapper) RequestPoem(c *fiber.Ctx) error {
+
+	c.Context().SetUserValue(CookieAuthScopes, []string{})
+
+	return siw.Handler.RequestPoem(c)
 }
 
 // GetUser operation middleware
 func (siw *ServerInterfaceWrapper) GetUser(c *fiber.Ctx) error {
+
+	c.Context().SetUserValue(CookieAuthScopes, []string{})
 
 	return siw.Handler.GetUser(c)
 }
@@ -128,11 +190,15 @@ func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, option
 		router.Use(fiber.Handler(m))
 	}
 
-	router.Get(options.BaseURL+"/callback", wrapper.Callback)
+	router.Get(options.BaseURL+"/auth/callback", wrapper.Callback)
 
-	router.Get(options.BaseURL+"/login", wrapper.Login)
+	router.Get(options.BaseURL+"/auth/login", wrapper.Login)
 
 	router.Get(options.BaseURL+"/logout", wrapper.Logout)
+
+	router.Get(options.BaseURL+"/poems", wrapper.GetUserPoemRequests)
+
+	router.Post(options.BaseURL+"/poems", wrapper.RequestPoem)
 
 	router.Get(options.BaseURL+"/user", wrapper.GetUser)
 
@@ -141,18 +207,24 @@ func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, option
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"kQ8AAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

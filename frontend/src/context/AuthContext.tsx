@@ -45,12 +45,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const goToLogin = () => {
     setLoading(true);
-    window.location.href = import.meta.env.VITE_API_BASE_PATH + "/login";
+    window.location.href =
+      import.meta.env.VITE_API_BASE_PATH + "/auth/login";
   };
 
   const goToLogout = () => {
     setLoading(true);
-    window.location.href = import.meta.env.VITE_API_BASE_PATH + "/logout";
+    window.location.href =
+      import.meta.env.VITE_API_BASE_PATH + "/logout";
   };
 
   const getUser = useCallback(async () => {

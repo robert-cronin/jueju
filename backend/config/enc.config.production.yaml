@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 auth0:
-    callback_url: https://jueju.robertcronin.com/api/callback
+    callback_url: https://jueju.robertcronin.com/api/v1/auth/callback
     redirect_url: https://jueju.robertcronin.com
 redis:
     host: redis-master.redis.svc.cluster.local
@@ -26,25 +26,25 @@ sops:
     azure_kv: []
     hc_vault: []
     age: []
-    lastmodified: "2024-06-24T08:43:44Z"
-    mac: ENC[AES256_GCM,data:MkSiMOnFX+N4ecTD0HLzHBRN+ooM0Iih4VkijshD2MSX/Ff+xkM1uP98VH8y3O6e7Rv5eL5WAznp1ia8YHru7tV+tKEi3couBUte0ZUWX/ryOW9PFNl/zQdD7NJNYqxcvM7GBT3bjmUBAHuLo+OkQBXJMgk2tMVQJqSNGoAsplM=,iv:V7fqnJHPjt+pFhQECHYbwJwjk+vFdur1En9oJaM5gIo=,tag:75wgMD276lp4m1wfDm2meQ==,type:str]
+    lastmodified: "2024-07-01T09:35:52Z"
+    mac: ENC[AES256_GCM,data:JV20psV/ICbBuAMgpERO8tlC450QtCMlJ8bC7p62+GX7xj7aMdFXIR3CVGqNK+zcnLsVJdkBRNFA4oN58CU4R/KRPM1ZfUMvRxBCt1ARiczRLqO2YZQfUmwmXoygV4986VZRckSY2+NRAzuTS3pLvbHpx4dZlzTAySK2TJ9/D/s=,iv:1Nwf1HTlKc8vJo2mFPzx06lW3oTzYrBtET9ktCmzjaI=,tag:ZGpNik28Z1NZdejhaQp79g==,type:str]
     pgp:
-        - created_at: "2024-06-24T08:43:44Z"
+        - created_at: "2024-07-01T09:35:52Z"
           enc: |-
             -----BEGIN PGP MESSAGE-----
 
-            hQGMA6eqXQ0/huC+AQv/a/d7ENA1IwJKk6qUmcSN4lQ1grxgwROT4mjHjhwUkK9y
-            /wyU0HRenA/Jh+4wR1qcZ4QWvd2XAjEbMe3w1fTVb3QjHRfSkirUlVwYhsk7aaGD
-            be4D4FWtTTnOA+Pk3iyPtbI4qRazvrG0kdU2pQj/+gMyEZs1Qj3j5wA62RBdtDjb
-            tSxy1WhtQZnj+LxMACtNHI9HefOyEBO+FQpbRlwVoE/jg+atsQFit88zEZRJmNKO
-            CSgvdABe09s7WQNUXcT4RYryEcB/Y5QjAedhT7i2Wqy+E2nRMKxBB3Jb6GBj9lMx
-            O3PB5ztohmpfEViL7JR/XUVSi75STOt/zrWePsC2xE3RRgJ8oplTXA+8TSkS3VnN
-            n1kSdcydOhBRF/pG/oCS0P7czbbSX6IV32KDgSfGtu/gqIDX2SqZzQCrTtwhA0eS
-            OdXQgrqigLRMSwlSWuP2QJ6GV48wVzm7J4J2zWoDvAV8i3kjq/KSSESPAB5i0jOn
-            F+IHFtfkjsmnZKJoSiZy0lwBNsDyPu14lSF6fxNjI37VWfeo+CpaBHjv7bVIFv7T
-            VzOhknYSn1jeC+qvcv1tZ1BGFTIEgDzkXVE6JI89/4RxQ1U2scyAZ7GWgFL/x66d
-            WMVknt8lAqhHXbvLjQ==
-            =sUtD
+            hQGMA6eqXQ0/huC+AQwAjZnSmZ4+QT+THKDe4trnXVtMD7lge0cKoV7y6kDEsfeP
+            m2MqjuVJ7+GP91tYCNzdgBYCUdpCDxxtQwE7YMdV83Hv9PiPMvRBZF6VI3vlVibb
+            wv6hoT5PgQxVmQbCfybiKs0Uc0hvZn6pHYz8QIz/UbMNYFo6p0QQjQFw5mSQtkqL
+            mNSaltKqb2DaPU48YdSc7ToC2+/NhqURNyY1A1tXlPNlf6RVTAePBM89jHEwOngs
+            exXISlSvyz5WSonvwO8X9GES7XTSudCOQf4/tkEogn6HAQrI5zLTR39Z2ATcPCpg
+            Lk1Wok/bpfJtLCLrYJcXURrvrlDuIrDFZm4z7Hmu7o2Z5UxTyFOw4YGtMiwDYsdy
+            1+HM62V76hn9LKO2O4nJzgHxkwRMHACecwpKtUoBHAiuctfUqsnY9MhmPqNtzFVV
+            MY0nxf4ea0HgYGigQ5NUllVrkVTPR+HaSXE3qeAld7Adc58p5dOVznHn/CCr3j1K
+            BbUmdrOrn1S8iCaoCDXh0l4BCNScGeo39gyOsSDLQh5v9dJkYKENgh1EYKBxj921
+            5UKCX29DCH9eDBgDpDn4S1zNdEg3HP8TxkRS3yiQGXsrFUO/Lj0fmF6PhTykalpU
+            eAKJ5w3XfER1+EUDUR4I
+            =1oSD
             -----END PGP MESSAGE-----
           fp: 17D956D69F581977E848FC9FA228985D4ABDC074
     encrypted_regex: (?i)id|secret|domain|dsn

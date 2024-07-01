@@ -30,7 +30,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func middleware(c *fiber.Ctx) error {
+func loggingMiddleware(c *fiber.Ctx) error {
 	fmt.Println("Request to", c.Path())
 	return c.Next()
 }
@@ -83,9 +83,25 @@ func Bootstrap() {
 		}))
 	}
 
-	// Register the API handlers
-	apiGroup := app.Group("/api", middleware)
-	api.RegisterHandlers(apiGroup, srv)
+	apiV1 := app.Group("/api/v1", loggingMiddleware)
+
+	// Register the unathenticated API handler
+	authGroup := apiV1.Group("/auth")
+	authGroup.Get("/login", srv.Login)
+	authGroup.Get("/callback", srv.Callback)
+
+	// Create protected routes group
+	protectedGroup := apiV1.Group("")
+	protectedGroup.Use(srv.Auth.AuthMiddleware())
+
+	// Register protected routes
+	protectedGroup.Get("/logout", srv.Logout)
+	protectedGroup.Get("/user", srv.GetUser)
+	protectedGroup.Get("/poems", srv.GetUserPoemRequests)
+	protectedGroup.Post("/poems", srv.RequestPoem)
+
+	// Use the generated handlers
+	api.RegisterHandlers(apiV1, srv)
 
 	// Start the server
 	log.Fatal(app.Listen("0.0.0.0:3000"))

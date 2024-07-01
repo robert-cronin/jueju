@@ -15,7 +15,10 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Poem struct {
@@ -25,4 +28,20 @@ type Poem struct {
 	Translation string    `gorm:"type:text"`
 	UserID      uuid.UUID `gorm:"not null"`
 	User        User      `gorm:"foreignKey:UserID"`
+}
+
+type PoemRequest struct {
+	ID        uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	UserID    uuid.UUID `gorm:"type:uuid;not null" json:"user_id"`
+	User      User      `gorm:"foreignKey:UserID" json:"-"`
+	Prompt    string    `gorm:"type:text;not null" json:"prompt"`
+	Poem      string    `gorm:"type:text" json:"poem"`
+	Status    string    `gorm:"type:varchar(20);not null" json:"status"` // e.g., "pending", "completed", "failed"
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (pr *PoemRequest) BeforeCreate(tx *gorm.DB) error {
+	pr.ID = uuid.New()
+	return nil
 }

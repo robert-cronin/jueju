@@ -25,57 +25,7 @@ servers:
     description: Local server
   - url: /api/v1
     description: Production server
-paths:
-  /login:
-    get:
-      summary: Logs user into the system via Auth0
-      operationId: login
-      responses:
-        default:
-          description: Error response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /logout:
-    get:
-      summary: Logs out current logged in user session
-      operationId: logout
-      responses:
-        default:
-          description: Error response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /callback:
-    get:
-      summary: Callback from Auth0
-      operationId: callback
-      responses:
-        default:
-          description: Error response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /user:
-    get:
-      summary: Get user information
-      operationId: getUser
-      responses:
-        "200":
-          description: User information
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        default:
-          description: Error response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     User:
@@ -118,6 +68,42 @@ components:
           type: string
           format: date-time
           description: Last login timestamp
+    PoemRequest:
+      type: object
+      required:
+        - id
+        - user_id
+        - prompt
+        - status
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        prompt:
+          type: string
+        poem:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed, failed]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PoemRequestInput:
+      type: object
+      required:
+        - prompt
+      properties:
+        prompt:
+          type: string
     Error:
       required:
         - code
@@ -130,3 +116,117 @@ components:
         message:
           type: string
           description: Error message
+
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session_token
+
+security:
+  - cookieAuth: []
+
+paths:
+  /auth/login:
+    get:
+      summary: Logs user into the system via Auth0
+      operationId: login
+      security: [] # No auth required for login
+      responses:
+        "302":
+          description: Redirect to Auth0
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/callback:
+    get:
+      summary: Callback from Auth0
+      operationId: callback
+      security: [] # No auth required for callback
+      responses:
+        "302":
+          description: Redirect to frontend
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /logout:
+    get:
+      summary: Logs out current logged in user session
+      operationId: logout
+      responses:
+        "302":
+          description: Redirect to login page
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /user:
+    get:
+      summary: Get user information
+      operationId: getUser
+      responses:
+        "200":
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /poems:
+    get:
+      summary: Get user's poem requests
+      operationId: getUserPoemRequests
+      responses:
+        "200":
+          description: List of user's poem requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PoemRequest"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      summary: Request a new poem
+      operationId: requestPoem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PoemRequestInput"
+      responses:
+        "200":
+          description: Successful poem request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PoemRequest"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
