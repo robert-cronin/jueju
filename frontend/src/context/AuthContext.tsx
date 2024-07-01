@@ -23,9 +23,10 @@ import React, {
   useCallback,
 } from "react";
 import useAPI from "@/hooks/useAPI";
+import type { User } from "@clients/v1.0";
 
 type AuthContextType = {
-  user: object | null;
+  user: User | null;
   goToLogin: () => void;
   goToLogout: () => void;
   loading: boolean;
@@ -38,21 +39,19 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<object | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const { api } = useAPI();
 
   const goToLogin = () => {
     setLoading(true);
-    window.location.href =
-      import.meta.env.VITE_API_BASE_PATH + "/auth/login";
+    window.location.href = import.meta.env.VITE_API_BASE_PATH + "/auth/login";
   };
 
   const goToLogout = () => {
     setLoading(true);
-    window.location.href =
-      import.meta.env.VITE_API_BASE_PATH + "/logout";
+    window.location.href = import.meta.env.VITE_API_BASE_PATH + "/logout";
   };
 
   const getUser = useCallback(async () => {

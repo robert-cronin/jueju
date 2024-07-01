@@ -12,22 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Routes, Route } from "react-router-dom";
-import Layout from "@/components/Layout";
-import Home from "@/pages/Home";
-import Create from "@/pages/Create";
-import Feed from "@/pages/Feed";
+import React from "react";
+import Navbar from "@/components/NavBar";
+import { Container } from "@mui/material";
+import TabBar from "@/components/TabBar";
 
-const App = () => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/create" element={<Create />} />
-        <Route path="/feed" element={<Feed />} />
-      </Routes>
-    </Layout>
+    <>
+      <Navbar />
+      <TabBar />
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        {children}
+      </Container>
+    </>
   );
 };
 
-export default App;
+export default Layout;

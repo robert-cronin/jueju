@@ -64,7 +64,7 @@ func RequestPoem(c *fiber.Ctx) error {
 	user.PoemCredits--
 	database.DB.Save(&user)
 
-	// TODO: call poem generation service (e.g., via gRPC)
+	// TODO: call poem generation service (e.g., via rabbitmq)
 	poemRequest.Status = "completed"
 	poemRequest.Poem = "This is a placeholder poem generated for prompt: " + input.Prompt
 	database.DB.Save(&poemRequest)

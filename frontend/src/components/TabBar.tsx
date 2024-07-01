@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Routes, Route } from "react-router-dom";
-import Layout from "@/components/Layout";
-import Home from "@/pages/Home";
-import Create from "@/pages/Create";
-import Feed from "@/pages/Feed";
+import { Tabs, Tab } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
 
-const App = () => {
+const TabBar = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/create" element={<Create />} />
-        <Route path="/feed" element={<Feed />} />
-      </Routes>
-    </Layout>
+    <Tabs value={currentPath} centered>
+      <Tab label="Home" value="/" component={Link} to="/" />
+      <Tab label="Create" value="/create" component={Link} to="/create" />
+      <Tab label="Feed" value="/feed" component={Link} to="/feed" />
+    </Tabs>
   );
 };
 
-export default App;
+export default TabBar;
