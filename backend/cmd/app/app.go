@@ -25,6 +25,7 @@ import (
 	"github.com/robert-cronin/jueju/backend/internal/api"
 	"github.com/robert-cronin/jueju/backend/internal/config"
 	"github.com/robert-cronin/jueju/backend/internal/database"
+	"github.com/robert-cronin/jueju/backend/internal/rabbitmq"
 	"github.com/robert-cronin/jueju/backend/internal/redis"
 	"github.com/robert-cronin/jueju/backend/internal/server"
 	"github.com/spf13/viper"
@@ -58,6 +59,9 @@ func Bootstrap() {
 
 	// Initialize the Redis client
 	redis.Init()
+
+	// Initialize the RabbitMQ client
+	rabbitmq.Init()
 
 	// Create the server
 	srv, err := server.NewServer()

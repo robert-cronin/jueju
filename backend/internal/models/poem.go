@@ -22,26 +22,20 @@ import (
 )
 
 type Poem struct {
-	ID          uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
-	Title       string    `gorm:"not null"`
-	Content     string    `gorm:"type:text;not null"`
-	Translation string    `gorm:"type:text"`
-	UserID      uuid.UUID `gorm:"not null"`
-	User        User      `gorm:"foreignKey:UserID"`
+	ID           uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	UserID       uuid.UUID `gorm:"type:uuid;not null" json:"user_id"`
+	User         User      `gorm:"foreignKey:UserID" json:"-"`
+	Prompt       string    `gorm:"type:text;not null" json:"prompt"`
+	Poem         string    `gorm:"type:text" json:"poem"`
+	Status       string    `gorm:"type:varchar(20);not null" json:"status"` // e.g., "pending", "processing", "completed", "failed"
+	AttemptCount int       `gorm:"default:0" json:"attempt_count"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-type PoemRequest struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
-	UserID    uuid.UUID `gorm:"type:uuid;not null" json:"user_id"`
-	User      User      `gorm:"foreignKey:UserID" json:"-"`
-	Prompt    string    `gorm:"type:text;not null" json:"prompt"`
-	Poem      string    `gorm:"type:text" json:"poem"`
-	Status    string    `gorm:"type:varchar(20);not null" json:"status"` // e.g., "pending", "completed", "failed"
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
-func (pr *PoemRequest) BeforeCreate(tx *gorm.DB) error {
+func (pr *Poem) BeforeCreate(tx *gorm.DB) error {
 	pr.ID = uuid.New()
+	pr.Status = "pending"
+	pr.AttemptCount = 0
 	return nil
 }

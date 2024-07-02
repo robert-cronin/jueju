@@ -69,20 +69,8 @@ func seedUsers(db *gorm.DB) error {
 }
 
 func seedPoems(db *gorm.DB, user models.User) error {
-	poems := []models.Poem{
-		{
-			Title:       "Poem One",
-			Content:     "Content of Poem One",
-			Translation: "Translation of Poem One",
-			UserID:      user.ID,
-		},
-		{
-			Title:       "Poem Two",
-			Content:     "Content of Poem Two",
-			Translation: "Translation of Poem Two",
-			UserID:      user.ID,
-		},
-	}
+	// TODO: Add some poems to seed
+	poems := []models.Poem{}
 
 	for _, poem := range poems {
 		if err := db.Create(&poem).Error; err != nil {

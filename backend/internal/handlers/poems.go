@@ -15,20 +15,18 @@
 package handlers
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/robert-cronin/jueju/backend/internal/database"
 	"github.com/robert-cronin/jueju/backend/internal/models"
+	"github.com/robert-cronin/jueju/backend/internal/rabbitmq"
 )
 
-type PoemRequestInput struct {
-	Prompt string `json:"prompt"`
-}
-
 func RequestPoem(c *fiber.Ctx) error {
-	var input PoemRequestInput
+	var input models.PoemRequestDTO
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
 	}
@@ -51,7 +49,7 @@ func RequestPoem(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "No poem credits remaining"})
 	}
 
-	poemRequest := models.PoemRequest{
+	poemRequest := models.Poem{
 		UserID: userID,
 		Prompt: input.Prompt,
 		Status: "pending",
@@ -64,21 +62,48 @@ func RequestPoem(c *fiber.Ctx) error {
 	user.PoemCredits--
 	database.DB.Save(&user)
 
-	// TODO: call poem generation service (e.g., via rabbitmq)
-	poemRequest.Status = "completed"
-	poemRequest.Poem = "This is a placeholder poem generated for prompt: " + input.Prompt
-	database.DB.Save(&poemRequest)
+	// Create DTO for response
+	responseDTO := models.PoemRequestDTO{
+		ID:        poemRequest.ID,
+		UserID:    poemRequest.UserID,
+		Prompt:    poemRequest.Prompt,
+		CreatedAt: poemRequest.CreatedAt,
+	}
 
-	return c.JSON(poemRequest)
+	// Publish message to RabbitMQ
+	message, err := json.Marshal(responseDTO)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal message"})
+	}
+
+	if err := rabbitmq.Client.PublishMessage("poem_requests", message); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to publish message to RabbitMQ"})
+	}
+
+	return c.JSON(responseDTO)
 }
 
 func GetUserPoemRequests(c *fiber.Ctx) error {
 	userID := c.Locals("userID").(uuid.UUID)
 
-	var poemRequests []models.PoemRequest
+	var poemRequests []models.Poem
 	if err := database.DB.Where("user_id = ?", userID).Find(&poemRequests).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch poem requests"})
 	}
 
-	return c.JSON(poemRequests)
+	// Convert to DTOs
+	var responseDTOs []models.PoemResponseDTO
+	for _, pr := range poemRequests {
+		responseDTOs = append(responseDTOs, models.PoemResponseDTO{
+			ID:        pr.ID,
+			UserID:    pr.UserID,
+			Prompt:    pr.Prompt,
+			Poem:      pr.Poem,
+			Status:    pr.Status,
+			CreatedAt: pr.CreatedAt,
+			UpdatedAt: pr.UpdatedAt,
+		})
+	}
+
+	return c.JSON(responseDTOs)
 }

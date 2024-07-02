@@ -39,7 +39,7 @@ func InitDB() {
 	}
 
 	// Migrate the database
-	err = DB.AutoMigrate(&models.User{}, &models.Poem{}, &models.PoemRequest{})
+	err = DB.AutoMigrate(&models.User{}, &models.Poem{}, &models.Poem{})
 	if err != nil {
 		panic(err)
 	}

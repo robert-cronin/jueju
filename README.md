@@ -33,6 +33,11 @@ The generation of poetry is powered by the sleeper-service, a Go microservice th
 Both frontend and backend are containerized using Docker, build with GitHub Actions and pushed to GitHub Container Registry.
 The production app is deployed to my [homelab](https://github.com/robert-cronin/homelab), a local Kubernetes cluster built on Rasberry Pi's. The website is exposed via a Cloudflare Argo Tunnel.
 
+
+## Architecture
+TODO: talk about the architecture of the app, the services, and the data flow.
+- RabbitMQ vs Kafka vs ActiveMQ vs Redis for message broker
+
 ### Frontend
 
 The frontend is bootstrapped with Vite, a modern front-end build tool that offers faster and leaner development experience for modern web projects. It uses React as the UI library and TypeScript for static type checking. The project structure is organized in a modular way, with separate directories for components and pages.
