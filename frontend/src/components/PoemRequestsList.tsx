@@ -14,13 +14,13 @@
 
 import React, { useEffect, useState } from "react";
 import { List, ListItem, ListItemText, Typography, Box } from "@mui/material";
-import { useApi } from "../hooks/useApi";
-import { PoemRequest } from "../api";
+import useAPI from "@/hooks/useAPI";
+import { PoemRequest } from "@clients/v1.0";
 
 const PoemRequestsList: React.FC = () => {
   const [poemRequests, setPoemRequests] = useState<PoemRequest[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const api = useApi();
+  const { api } = useAPI();
 
   useEffect(() => {
     const fetchPoemRequests = async () => {
