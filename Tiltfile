@@ -20,13 +20,8 @@ local_resource(
     'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./build/main .',
     dir='./backend',
 )
-secret_create_generic(
-    name='jueju',
-    namespace='jueju',
-    from_env_file='./backend/.env',
-)
-k8s_yaml('./deploy/backend-deployment.yaml')
-k8s_yaml('./deploy/namespace.yaml')
+k8s_yaml('./deploy/backend.yaml')
+k8s_yaml('./deploy/namespaces.yaml')
 k8s_resource('jueju-backend', port_forwards='3000:3000')
 
 
@@ -40,5 +35,5 @@ docker_build(
     ],
     target='dev'
 )
-k8s_yaml('./deploy/frontend-deployment.yaml')
+k8s_yaml('./deploy/frontend.yaml')
 k8s_resource('jueju-frontend', port_forwards='5173:5173')
