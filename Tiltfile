@@ -2,7 +2,7 @@ load('ext://restart_process', 'docker_build_with_restart')
 load('ext://secret', 'secret_create_generic')
 
 # Test kube context for kind
-k8s_context('kind-kind')
+allow_k8s_contexts('kind-kind')
 
 # Backend
 docker_build(
@@ -21,7 +21,6 @@ local_resource(
     dir='./backend',
 )
 k8s_yaml('./deploy/backend.yaml')
-k8s_yaml('./deploy/namespaces.yaml')
 k8s_resource('jueju-backend', port_forwards='3000:3000')
 
 
