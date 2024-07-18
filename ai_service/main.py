@@ -43,7 +43,7 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 @limits(calls=50, period=3600)
 def generate_poem(prompt):
     response = client.completions.create(
-        model="text-davinci-002",
+        model="gpt-3.5-turbo-instruct",
         prompt=f"Create a Chinese 绝句 (jué jù) poem based on the following prompt: {prompt}",
         max_tokens=100,
         n=1,
@@ -83,7 +83,7 @@ def callback(ch, method, properties, body):
             body=json.dumps(response)
         )
 
-        print(f"Generated poem for request {poem_request_id}")
+        print(f"Generated poem for request {poem_request_id}: {poem}")
 
         # Acknowledge the message
         ch.basic_ack(delivery_tag=method.delivery_tag)

@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [frontend, backend]
+        service: [frontend, backend, ai_service]
 
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
