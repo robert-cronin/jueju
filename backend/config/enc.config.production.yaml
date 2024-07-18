@@ -18,6 +18,10 @@ redis:
     host: redis-master.redis.svc.cluster.local
     port: 6379
     db: 0
+rabbitmq:
+    host: rabbitmq.rabbitmq.svc.cluster.local
+    port: 5672
+    user: user
 session:
     secure: true
 sops:
@@ -26,25 +30,25 @@ sops:
     azure_kv: []
     hc_vault: []
     age: []
-    lastmodified: "2024-07-01T09:35:52Z"
-    mac: ENC[AES256_GCM,data:JV20psV/ICbBuAMgpERO8tlC450QtCMlJ8bC7p62+GX7xj7aMdFXIR3CVGqNK+zcnLsVJdkBRNFA4oN58CU4R/KRPM1ZfUMvRxBCt1ARiczRLqO2YZQfUmwmXoygV4986VZRckSY2+NRAzuTS3pLvbHpx4dZlzTAySK2TJ9/D/s=,iv:1Nwf1HTlKc8vJo2mFPzx06lW3oTzYrBtET9ktCmzjaI=,tag:ZGpNik28Z1NZdejhaQp79g==,type:str]
+    lastmodified: "2024-07-18T08:50:35Z"
+    mac: ENC[AES256_GCM,data:1MucFN8HSfOH0QgBDK+UHhRoOskIxKzvnSO0g1jUuJGQHSLSBLSNTmzX3nvWDO81wAxb700txhjpuC7nUL2vxnrSgmM0fkRTaMh9VNYQMRrcwL0u9IEGLbeqFVfimnbXwBQEOhNRMrD9OA4etfqhyjeRtkxWqaJ62FMNGvZBpZw=,iv:lo32j4Dm7HynfmSmi6qVgUiYbHbZ4gUL2cYCxdRpQjA=,tag:mWPN7JusMDW1N0i9DB294A==,type:str]
     pgp:
-        - created_at: "2024-07-01T09:35:52Z"
+        - created_at: "2024-07-18T08:50:35Z"
           enc: |-
             -----BEGIN PGP MESSAGE-----
 
-            hQGMA6eqXQ0/huC+AQwAjZnSmZ4+QT+THKDe4trnXVtMD7lge0cKoV7y6kDEsfeP
-            m2MqjuVJ7+GP91tYCNzdgBYCUdpCDxxtQwE7YMdV83Hv9PiPMvRBZF6VI3vlVibb
-            wv6hoT5PgQxVmQbCfybiKs0Uc0hvZn6pHYz8QIz/UbMNYFo6p0QQjQFw5mSQtkqL
-            mNSaltKqb2DaPU48YdSc7ToC2+/NhqURNyY1A1tXlPNlf6RVTAePBM89jHEwOngs
-            exXISlSvyz5WSonvwO8X9GES7XTSudCOQf4/tkEogn6HAQrI5zLTR39Z2ATcPCpg
-            Lk1Wok/bpfJtLCLrYJcXURrvrlDuIrDFZm4z7Hmu7o2Z5UxTyFOw4YGtMiwDYsdy
-            1+HM62V76hn9LKO2O4nJzgHxkwRMHACecwpKtUoBHAiuctfUqsnY9MhmPqNtzFVV
-            MY0nxf4ea0HgYGigQ5NUllVrkVTPR+HaSXE3qeAld7Adc58p5dOVznHn/CCr3j1K
-            BbUmdrOrn1S8iCaoCDXh0l4BCNScGeo39gyOsSDLQh5v9dJkYKENgh1EYKBxj921
-            5UKCX29DCH9eDBgDpDn4S1zNdEg3HP8TxkRS3yiQGXsrFUO/Lj0fmF6PhTykalpU
-            eAKJ5w3XfER1+EUDUR4I
-            =1oSD
+            hQGMA6eqXQ0/huC+AQv/aiQlmj700BRbz4Yt6l0uU9btGVzzj/Bt81+OrbQVspDH
+            D2MyilXFFs/s2VHkGFpYlGrUY3MnDDg8Iy1fjOEMcR5eVy76L4+4kXaK4rboxwv1
+            UA78BGGpX5TYNE/nEm6/2nYqicjcH4bDJ4Bga8G3Xou4py1HyEX1wigyzJksRyMP
+            g42rm6OFzwKME3tqn2xJyNelp8vmG/8z/1ub4H/kjTIK6uWbraQEIvhsgmGHX7Xa
+            uWlrFN3rnHyhmx/8z2Ikhk2zdxmHT3JXXs5ZaFuJtxmvnqkkHia4ZCxj+advAf05
+            GDEo1j7HwPPO3v47T4Yhc5xiKjV8+6li4MkYqOO7RbPP6ywjQ7tslRLS+Eo6QzXw
+            rWvG24DytH3RVF//SV1mfp41XedtSVa95mGh8Ny4WDMqDuAraJeaU9wJ4tufwJrT
+            cZTmQ0keGAZg2ZvGzLt5kKpP/15mFQr6cRJHGuZGOUD7zqXpyErt3jl7wjb+9D43
+            7yAApb/XkXJCsJFFQQZT0l4BamR4E9VahUx3rBHwcpu0vOKgapkLll17ed3Re4c7
+            LYVUhkHKLl6Np1vok3URDxLW+NkVnQYZM50x7fzHPUdC+P8mmHWZ58XNgoFVJGCM
+            ooCxrdOPg+Cl5owiWdSm
+            =FulA
             -----END PGP MESSAGE-----
           fp: 17D956D69F581977E848FC9FA228985D4ABDC074
     encrypted_regex: (?i)id|secret|domain|dsn

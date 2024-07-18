@@ -75,6 +75,11 @@ spec:
                 secretKeyRef:
                   name: redis
                   key: redis-password
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq
+                  key: rabbitmq-password
           volumeMounts:
             - name: config-volume
               mountPath: /app/config/config.yaml
