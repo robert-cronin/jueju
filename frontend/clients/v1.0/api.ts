@@ -79,6 +79,12 @@ export interface PoemRequest {
      */
     'status': PoemRequestStatusEnum;
     /**
+     * Number of attempts made for this poem request
+     * @type {number}
+     * @memberof PoemRequest
+     */
+    'attempt_count'?: number;
+    /**
      * 
      * @type {string}
      * @memberof PoemRequest
@@ -112,6 +118,31 @@ export interface PoemRequestInput {
      * @memberof PoemRequestInput
      */
     'prompt': string;
+}
+/**
+ * 
+ * @export
+ * @interface RequestPoem403Response
+ */
+export interface RequestPoem403Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof RequestPoem403Response
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RequestPoem403Response
+     */
+    'credits_required'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RequestPoem403Response
+     */
+    'credits_available'?: number;
 }
 /**
  * 
@@ -179,6 +210,18 @@ export interface User {
      * @memberof User
      */
     'last_login'?: string;
+    /**
+     * Number of poem credits available to the user
+     * @type {number}
+     * @memberof User
+     */
+    'poem_credits'?: number;
+    /**
+     * Timestamp of the last credit reset
+     * @type {string}
+     * @memberof User
+     */
+    'last_credit_reset'?: string;
 }
 
 /**

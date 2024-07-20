@@ -12,25 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from "react";
-import { Container, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Container, Typography, Box, Button, Alert } from "@mui/material";
 import PoemRequestForm from "@/components/PoemRequestForm";
-import { useNavigate } from "react-router-dom";
+import PoemList from "@/components/PoemList";
+import useAuth from "@/hooks/useAuth";
 
 const Create: React.FC = () => {
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [showAlert, setShowAlert] = useState(false);
 
-  const handlePoemCreated = () => {
-    // Redirect to home after poem is created
-    navigate("/");
+  const handleGetMoreCredits = () => {
+    setShowAlert(true);
+    setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <Typography variant="h4" component="h1" gutterBottom align="center">
         Create a New Poem
       </Typography>
-      <PoemRequestForm onPoemCreated={handlePoemCreated} />
+      <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+        <Typography variant="h6" mr={2}>
+          Poem Credits: {user?.poem_credits || 0}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGetMoreCredits}
+        >
+          Get More Credits
+        </Button>
+      </Box>
+      {showAlert && (
+        <Alert severity="info" onClose={() => setShowAlert(false)}>
+          This feature is currently in development. Stay tuned for updates!
+        </Alert>
+      )}
+      <PoemRequestForm />
+      <Box mt={4}>
+        <PoemList status="pending" />
+      </Box>
+      <Box mt={4}>
+        <PoemList status="failed" />
+      </Box>
     </Container>
   );
 };

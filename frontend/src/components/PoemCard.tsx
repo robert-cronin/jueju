@@ -13,15 +13,21 @@
 // limitations under the License.
 
 import React from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 
 interface PoemCardProps {
   title: string;
   content: string;
   translation: string;
+  onRetry?: () => void;
 }
 
-const PoemCard: React.FC<PoemCardProps> = ({ title, content, translation }) => {
+const PoemCard: React.FC<PoemCardProps> = ({
+  title,
+  content,
+  translation,
+  onRetry,
+}) => {
   return (
     <Card sx={{ minWidth: 275, maxWidth: 400, margin: "16px auto" }}>
       <CardContent>
@@ -33,11 +39,12 @@ const PoemCard: React.FC<PoemCardProps> = ({ title, content, translation }) => {
             {content}
           </Typography>
         </Box>
-        <Typography variant="body2">
-          Translation:
-          <br />
-          {translation}
-        </Typography>
+        <Typography variant="body2">Status: {translation}</Typography>
+        {onRetry && (
+          <Button variant="outlined" onClick={onRetry} sx={{ mt: 1 }}>
+            Retry
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

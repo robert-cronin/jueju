@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Container, Typography, Button } from "@mui/material";
+import React from "react";
+import { Container, Typography } from "@mui/material";
+import PoemList from "@/components/PoemList";
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <Typography variant="h2" align="center" gutterBottom>
-        Welcome Home
+        Welcome to JueJu
       </Typography>
       <Typography variant="body1" align="center" gutterBottom>
-        This is a simple home screen.
+        Create and explore AI-generated Chinese poetry.
       </Typography>
-      <Button variant="contained" color="primary">
-        Click Me
-      </Button>
+      <PoemList status="completed" />
     </Container>
   );
 };
