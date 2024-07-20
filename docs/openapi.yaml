@@ -68,6 +68,13 @@ components:
           type: string
           format: date-time
           description: Last login timestamp
+        poem_credits:
+          type: integer
+          description: Number of poem credits available to the user
+        last_credit_reset:
+          type: string
+          format: date-time
+          description: Timestamp of the last credit reset
     PoemRequest:
       type: object
       required:
@@ -91,6 +98,9 @@ components:
         status:
           type: string
           enum: [pending, completed, failed]
+        attempt_count:
+          type: integer
+          description: Number of attempts made for this poem request
         created_at:
           type: string
           format: date-time
@@ -124,6 +134,21 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+
+    InsufficientCreditsResponse:
+      description: User doesn't have enough credits
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Insufficient credits"
+              credits_required:
+                type: integer
+              credits_available:
+                type: integer
 
   securitySchemes:
     cookieAuth:
@@ -228,5 +253,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PoemRequest"
+        "403":
+          $ref: "#/components/responses/InsufficientCreditsResponse"
         default:
           $ref: "#/components/responses/ErrorResponse"

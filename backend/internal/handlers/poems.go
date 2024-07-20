@@ -15,14 +15,12 @@
 package handlers
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/robert-cronin/jueju/backend/internal/database"
 	"github.com/robert-cronin/jueju/backend/internal/models"
-	"github.com/robert-cronin/jueju/backend/internal/rabbitmq"
 )
 
 func RequestPoem(c *fiber.Ctx) error {
@@ -46,13 +44,18 @@ func RequestPoem(c *fiber.Ctx) error {
 	}
 
 	if user.PoemCredits <= 0 {
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "No poem credits remaining"})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error":             "Insufficient credits",
+			"credits_required":  1,
+			"credits_available": user.PoemCredits,
+		})
 	}
 
 	poemRequest := models.Poem{
-		UserID: userID,
-		Prompt: input.Prompt,
-		Status: "pending",
+		UserID:       userID,
+		Prompt:       input.Prompt,
+		Status:       "pending",
+		AttemptCount: 1,
 	}
 
 	if err := database.DB.Create(&poemRequest).Error; err != nil {
@@ -64,20 +67,12 @@ func RequestPoem(c *fiber.Ctx) error {
 
 	// Create DTO for response
 	responseDTO := models.PoemRequestDTO{
-		ID:        poemRequest.ID,
-		UserID:    poemRequest.UserID,
-		Prompt:    poemRequest.Prompt,
-		CreatedAt: poemRequest.CreatedAt,
-	}
-
-	// Publish message to RabbitMQ
-	message, err := json.Marshal(responseDTO)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal message"})
-	}
-
-	if err := rabbitmq.Client.PublishMessage("poem_requests", message); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to publish message to RabbitMQ"})
+		ID:           poemRequest.ID,
+		UserID:       poemRequest.UserID,
+		Prompt:       poemRequest.Prompt,
+		Status:       poemRequest.Status,
+		AttemptCount: poemRequest.AttemptCount,
+		CreatedAt:    poemRequest.CreatedAt,
 	}
 
 	return c.JSON(responseDTO)

@@ -23,6 +23,8 @@ type PoemRequestDTO struct {
 	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"user_id"`
 	Prompt    string    `json:"prompt"`
+	Status    string    `json:"status"`
+	AttemptCount int    `json:"attempt_count"`
 	CreatedAt time.Time `json:"created_at"`
 }
 

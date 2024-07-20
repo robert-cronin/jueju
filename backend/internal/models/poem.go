@@ -27,7 +27,7 @@ type Poem struct {
 	User         User      `gorm:"foreignKey:UserID" json:"-"`
 	Prompt       string    `gorm:"type:text;not null" json:"prompt"`
 	Poem         string    `gorm:"type:text" json:"poem"`
-	Status       string    `gorm:"type:varchar(20);not null" json:"status"` // e.g., "pending", "processing", "completed", "failed"
+	Status       string    `gorm:"type:varchar(20);not null" json:"status"`
 	AttemptCount int       `gorm:"default:0" json:"attempt_count"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
