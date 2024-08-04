@@ -4,10 +4,9 @@
 import pika
 import os
 
-def send_rabbit_msg(rabbit_url, input_message):
+def send_rabbit_msg(rabbit_url=os.getenv('RABBITMQ_URL'), input_message=""):
     # Set connection parameters
-    rmq_url = os.getenv('RABBITMQ_URL')
-    connection = pika.BlockingConnection(pika.URLParameters(rmq_url))
+    connection = pika.BlockingConnection(pika.URLParameters(rabbit_url))
     channel = connection.channel()
 
     # Declare the queue from user to RabbitMQ
