@@ -1,8 +1,21 @@
 load('ext://restart_process', 'docker_build_with_restart')
 load('ext://secret', 'secret_create_generic')
+load('ext://namespace', 'namespace_create', 'namespace_inject')
 
-# Test kube context for kind
-allow_k8s_contexts('kind-kind')
+# ================== Safety ==================
+# don't allow any context except "minikube"
+allow_k8s_contexts('minikube')
+if k8s_context() != 'minikube':
+  fail("failing early, needs context called 'minikube'")
+
+docker_prune_settings(num_builds=2)
+
+namespace_create('jueju')
+k8s_resource(
+    objects=['jueju:namespace'],
+    new_name='jueju-namespace',
+    labels=['chart'],
+)
 
 # Backend
 docker_build(
@@ -23,6 +36,13 @@ local_resource(
 k8s_yaml('./deploy/backend.yaml')
 k8s_resource('jueju-backend', port_forwards='3000:3000')
 
+local_resource(
+    'backend-lint',
+    'golangci-lint run ./...',
+    dir='./backend',
+    deps=['backend'],
+    labels=['dev']
+)
 
 # Frontend
 docker_build(
@@ -36,3 +56,35 @@ docker_build(
 )
 k8s_yaml('./deploy/frontend.yaml')
 k8s_resource('jueju-frontend', port_forwards='5173:5173')
+
+# ============== Dev resources ==============
+local_resource(
+    'frontend-lint',
+    'yarn lint',
+    dir='./frontend',
+    deps=['frontend'],
+    labels=['dev']
+)
+
+# ============== Helm ==============
+yaml = helm(
+  './chart',
+  name='jueju',
+  namespace='kubemedic',
+  values=['./chart/values.yaml'],
+)
+k8s_yaml(yaml)
+
+# ============== Secrets ==============
+secret_create_generic(
+    'jueju',
+    {
+        'POSTGRES_PASSWORD': 'letmein',
+    },
+    namespace='jueju',
+)
+
+
+# ============== Utils ==============
+k8s_yaml('./tilt/postgres.yaml')
+k8s_yaml('./tilt/redis.yaml')
