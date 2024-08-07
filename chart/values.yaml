@@ -1,0 +1,70 @@
+namespace: jueju
+app: jueju
+version: v1
+
+aiService:
+  name: jueju-ai-service
+  port: 80
+  targetPort: 80
+  replicas: 1
+  image:
+    repository: ghcr.io/robert-cronin/jueju
+    tag: ai-service-latest
+    pullPolicy: Always
+
+backend:
+  name: jueju-backend
+  port: 3000
+  targetPort: 3000
+  replicas: 1
+  image:
+    repository: ghcr.io/robert-cronin/jueju
+    tag: backend-latest
+    pullPolicy: Always
+
+frontend:
+  name: jueju-frontend
+  port: 80
+  targetPort: 80
+  replicas: 1
+  image:
+    repository: ghcr.io/robert-cronin/jueju
+    tag: frontend-latest
+    pullPolicy: Always
+
+route:
+  name: jueju-backend
+  hostname: jueju.robertcronin.com
+  gateway:
+    name: gateway
+    namespace: robertcronincom
+
+autoscaling:
+  enabled: true
+  aiService:
+    minReplicas: 1
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+  backend:
+    minReplicas: 1
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+  frontend:
+    minReplicas: 1
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+rabbitmq:
+  secretName: jueju-rabbitmq
+
+claude:
+  secretName: jueju-claude
+
+database:
+  secretName: jueju-db-app
+
+redis:
+  secretName: redis

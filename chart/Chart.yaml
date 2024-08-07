@@ -1,0 +1,18 @@
+apiVersion: v2
+name: jueju
+description: A Helm chart for the JueJu AI-powered Chinese Poetry platform
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: Robert Cronin
+    email: robert@robertcronin.com
+keywords:
+  - ai
+  - poetry
+  - chinese
+  - jueju
+home: https://jueju.robertcronin.com
+sources:
+  - https://github.com/robert-cronin/jueju
+icon: https://jueju.robertcronin.com/icon.svg

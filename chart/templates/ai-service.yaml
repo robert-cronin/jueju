@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.aiService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.app }}
+    service: {{ .Values.aiService.name }}
+spec:
+  ports:
+    - port: {{ .Values.aiService.port }}
+      targetPort: {{ .Values.aiService.targetPort }}
+      name: http
+  selector:
+    app: {{ .Values.app }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.aiService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.app }}
+    version: {{ .Values.version }}
+spec:
+  replicas: {{ .Values.aiService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+      version: {{ .Values.version }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app }}
+        version: {{ .Values.version }}
+    spec:
+      serviceAccountName: {{ .Values.aiService.name }}
+      containers:
+        - name: {{ .Values.aiService.name }}
+          image: "{{ .Values.aiService.image.repository }}:{{ .Values.aiService.image.tag }}"
+          imagePullPolicy: {{ .Values.aiService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.aiService.targetPort }}
+          env:
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.rabbitmq.secretName }}
+                  key: url
+            - name: CLAUDE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.claude.secretName }}
+                  key: api-key

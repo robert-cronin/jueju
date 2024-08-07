@@ -1,0 +1,45 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+{{- if .Values.route.enabled }}
+You can access the JueJu application by navigating to:
+  https://{{ .Values.route.hostname }}
+
+{{- else }}
+To access the JueJu application, you need to set up an Ingress or use port-forwarding:
+
+For port-forwarding to the frontend service:
+  $ kubectl port-forward -n {{ .Values.namespace }} svc/{{ .Values.frontend.name }} 8080:{{ .Values.frontend.port }}
+
+Then you can access the application at:
+  http://localhost:8080
+
+For port-forwarding to the backend API:
+  $ kubectl port-forward -n {{ .Values.namespace }} svc/{{ .Values.backend.name }} 3000:{{ .Values.backend.port }}
+
+Then you can access the API at:
+  http://localhost:3000
+{{- end }}
+
+{{- if .Values.autoscaling.enabled }}
+Horizontal Pod Autoscaling is enabled:
+  AI Service: min {{ .Values.autoscaling.aiService.minReplicas }} / max {{ .Values.autoscaling.aiService.maxReplicas }}
+  Backend: min {{ .Values.autoscaling.backend.minReplicas }} / max {{ .Values.autoscaling.backend.maxReplicas }}
+  Frontend: min {{ .Values.autoscaling.frontend.minReplicas }} / max {{ .Values.autoscaling.frontend.maxReplicas }}
+{{- else }}
+Horizontal Pod Autoscaling is disabled.
+{{- end }}
+
+For more information on using JueJu, please refer to the documentation at:
+https://github.com/robert-cronin/jueju
+
+If you encounter any issues, please report them at:
+https://github.com/robert-cronin/jueju/issues
+
+Enjoy creating AI-powered Chinese poetry with JueJu!
