@@ -1,4 +1,12 @@
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.aiService.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    account: {{ .Values.aiService.name }}
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.aiService.name }}
@@ -47,8 +55,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.rabbitmq.secretName }}
                   key: url
-            - name: CLAUDE_API_KEY
+            - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.claude.secretName }}
+                  name: {{ .Values.openai.secretName }}
                   key: api-key

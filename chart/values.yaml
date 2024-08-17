@@ -58,13 +58,16 @@ autoscaling:
     targetMemoryUtilizationPercentage: 80
 
 rabbitmq:
-  secretName: jueju-rabbitmq
+  secretName: rabbitmq
 
-claude:
-  secretName: jueju-claude
+openai:
+  secretName: openai
 
 database:
   secretName: jueju-db-app
 
 redis:
   secretName: redis
+
+istio:
+  enabled: true

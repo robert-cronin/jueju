@@ -1,4 +1,13 @@
-
+{{- include "namespace.validateLabels" . }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.frontend.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    account: {{ .Values.frontend.name }}
+---
 apiVersion: v1
 kind: Service
 metadata:
